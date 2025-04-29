@@ -1,0 +1,56 @@
+.main {
+    font-family: $sf_mono;
+    line-height: 1.2;
+    background-color: var(--background-primary);
+
+    h1 {
+        font-weight: 700;
+        font-size: 2.25rem;
+        color: var(--accent-primary);
+    }
+
+    h2 {
+        font-weight: 600;
+        font-size: 2rem;
+        color: var(--accent-primary);
+    }
+
+    h3 {
+        font-weight: 700;
+        font-size: 1.75rem;
+        color: var(--accent-primary);
+    }
+
+    h4 {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--accent-primary);
+    }
+
+    h5 {
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--accent-primary);
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    &__link {
+        color: var(--main-link);
+        text-decoration: underline;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    &__border {
+        border: 1px solid var(--separator-primary);
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+}

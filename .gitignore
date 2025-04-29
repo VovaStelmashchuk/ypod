@@ -1,0 +1,20 @@
+# Node dependencies
+node_modules
+
+.git
+.idea
+.tmp
+.nuxt
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Secrets
+.secret.json
+

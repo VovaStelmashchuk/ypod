@@ -1,0 +1,10 @@
+.env
+
+# Node dependencies
+node_modules
+
+.git
+.idea
+.tmp
+.secret.json
+.nuxt
