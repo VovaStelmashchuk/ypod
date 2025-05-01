@@ -4,19 +4,6 @@
             <h1 class="modal__title">Login to your account</h1>
             <div class="modal__item item">
                 <img
-                    src="/github-logo.svg"
-                    loading="lazy"
-                    alt="github logo"
-                    class="item__img"
-                />
-                <MainButton
-                    :theme="buttonThemeType.primary"
-                    @click="doAuth('github')"
-                    label="Login with Github"
-                />
-            </div>
-            <div class="modal__item item">
-                <img
                     src="/google-logo.svg"
                     loading="lazy"
                     alt="google logo"

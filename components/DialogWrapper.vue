@@ -5,10 +5,10 @@
 
             <div class="modal__body modal-body">
                 <MainButton
-                    :theme="buttonThemeType.primary"
                     label="close modal"
                     :isLabelShow="false"
                     :size="buttonSizeType.s"
+                    :icon="iconType.close"
                     @click="closeModal"
                     class="modal-body__close"
                 />
@@ -20,6 +20,7 @@
 
 <script setup>
 import { buttonSizeType, buttonThemeType } from '~~/constants/button.constants'
+import { iconType } from '~~/constants/icon.constants'
 
 const { isModalOpen } = defineProps({
     isModalOpen: {

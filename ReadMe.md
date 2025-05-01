@@ -24,10 +24,6 @@ Sample of `.secret.json` file:
     "google": {
         "clientId": "<google-client-id>"
     },
-    "github": {
-        "clientId": "<github-client-id>",
-        "clientSecret": "<github-client-secret>"
-    },
     "baseUrl": "http://localhost:3000"
 }
 ```

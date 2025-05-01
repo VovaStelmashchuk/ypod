@@ -16,7 +16,9 @@
         "standard-slugify": "^4.0.0",
         "vite": "^6.0.6",
         "vue": "latest",
-        "vue-router": "latest"
+        "vue-router": "latest",
+        "googleapis": "^73.0.0",
+        "podcast": "^2.0.1"
     },
     "devDependencies": {
         "postinstall-postinstall": "^2.1.0",

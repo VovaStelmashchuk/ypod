@@ -6,20 +6,20 @@ export function getConfig() {
     return JSON.parse(asText)
 }
 
-export function getDiscordToken() {
-    const config = getConfig()
-    return config.discord.botToken
-}
-
-export function getDiscord() {
-    const config = getConfig()
-    return config.discord
-}
-
 export function getBaseUrl() {
     return runtimeConfig.baseUrl
 }
 
 export function getCommitSha() {
     return runtimeConfig.gitCommitSha || 'unknown'
+}
+
+export function getYoutubeApiKey() {
+    const config = getConfig()
+    return config.youtubeApiKey
+}
+
+export function getRapidApiKey() {
+    const config = getConfig()
+    return config.rapidApiKey
 }

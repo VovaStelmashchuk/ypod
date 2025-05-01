@@ -80,6 +80,7 @@ const buttonClasses = computed(() => ({
         background-color 0.3s,
         opacity 0.3s;
     width: max-content;
+    border: none;
 
     &__label {
         display: block;
@@ -91,10 +92,8 @@ const buttonClasses = computed(() => ({
     }
 
     &--size-s {
-        border-radius: 0.5rem;
-        padding: 0.6rem;
-        width: 0.75rem;
-        height: 0.75rem;
+        border-radius: 5px;
+        padding: 9px;
 
         #{$self}__label {
             font-size: 10px;

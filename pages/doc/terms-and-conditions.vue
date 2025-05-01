@@ -2,8 +2,8 @@
     <div class="main">
         <h1>Terms and Conditions</h1>
         <p>
-            Welcome to our SaaS boilerplate project. By using this project, you
-            agree to the following terms and conditions.
+            By using this project, you agree to the following terms and
+            conditions.
         </p>
         <h2>Usage</h2>
         <p>
