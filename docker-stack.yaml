@@ -1,23 +1,23 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  app:
-    image: ghcr.io/vovastelmashchuk/kickstart:${GIT_COMMIT_SHA:-latest}
-    network_mode: "host"
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-    ports:
-      - "10001:3000"
-    environment:
-      - NUXT_PUBLIC_SECRET_FILE=/run/secrets/kickstart-secret
-      - NUXT_PUBLIC_BASE_URL=https://kickstart.stelmashchuk.dev
-    secrets:
-      - kickstart-secret
-    deploy:
-      update_config:
-        order: start-first
+    app:
+        image: ghcr.io/vovastelmashchuk/kickstart:${GIT_COMMIT_SHA:-latest}
+        network_mode: 'host'
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+        ports:
+            - '10001:3000'
+        environment:
+            - NUXT_PUBLIC_SECRET_FILE=/run/secrets/ypod-secret
+            - NUXT_PUBLIC_BASE_URL=https://ypod.stelmashchuk.dev
+        secrets:
+            - ypod-secret
+        deploy:
+            update_config:
+                order: start-first
 
 secrets:
-  kickstart-secret:
-    external: true
+    ypod-secret:
+        external: true
