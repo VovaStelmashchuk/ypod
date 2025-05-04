@@ -8,6 +8,7 @@ on:
 env:
     REGISTRY: ghcr.io
     DEPLOY_USER: deploy
+    DOCKER_STACK_NAME: stack-ypod
     HOST: 167.235.52.168
 
 jobs:
@@ -21,8 +22,8 @@ jobs:
               id: set_repo
               run: |
                   echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
-                  echo "DOCKER_STACK_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
                   echo "GIT_COMMIT_SHA=${{ github.sha }}" >> $GITHUB_OUTPUT
+                  echo "DOCKER_STACK_NAME=${{ env.DOCKER_STACK_NAME }}" >> $GITHUB_OUTPUT
 
     build-and-push-image:
         runs-on: ubuntu-latest
