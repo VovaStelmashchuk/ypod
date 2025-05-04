@@ -69,7 +69,6 @@ jobs:
         env:
             REPO_NAME: ${{ needs.prepare-env.outputs.REPO_NAME }}
             GIT_COMMIT_SHA: ${{ needs.prepare-env.outputs.GIT_COMMIT_SHA }}
-            DOCKER_STACK_NAME: ${{ needs.prepare-env.outputs.DOCKER_STACK_NAME }}
 
         steps:
             - name: Checkout repository
