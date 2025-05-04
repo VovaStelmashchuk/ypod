@@ -69,7 +69,7 @@ export async function updateRss(showSlug) {
     episodes.forEach((post, index) => {
         let episodeDescription = post.description
 
-        let linkToEpisode = `${host}/podcast/${post.slug}`
+        let linkToEpisode = `${host}/episode/${post.slug}`
 
         let guid = post.youtubeVideoId
 
