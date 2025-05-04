@@ -7,13 +7,29 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    DOCKER_STACKE_NAME: stack-ypod
     DEPLOY_USER: deploy
     HOST: 167.235.52.168
 
 jobs:
+    prepare-env:
+        name: Prepare environment
+        runs-on: ubuntu-latest
+        outputs:
+            repo_name: ${{ steps.set_repo.outputs.repo_name }}
+        steps:
+            - name: Determine lowercase repo name
+              id: set_repo
+              run: |
+                  echo "repo_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+                  echo "DOCKER_STACKE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+
     build-and-push-image:
         runs-on: ubuntu-latest
+        needs:
+            - prepare-env
+        env:
+            REPO_NAME: ${{ needs.build-and-push-image.outputs.repo_name }}
+
         permissions:
             contents: read
             packages: write
@@ -21,10 +37,6 @@ jobs:
             id-token: write
 
         steps:
-            - name: Get repository name in lowercase
-              id: repo_name
-              run: echo "REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
             - name: Checkout repository
               uses: actions/checkout@v4
 
@@ -50,6 +62,9 @@ jobs:
         runs-on: ubuntu-latest
         needs:
             - build-and-push-image
+            - prepare-env
+        env:
+            REPO_NAME: ${{ needs.build-and-push-image.outputs.repo_name }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
