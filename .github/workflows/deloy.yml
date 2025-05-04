@@ -21,7 +21,7 @@ jobs:
               id: set_repo
               run: |
                   echo "repo_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
-                  echo "DOCKER_STACKE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+                  echo "DOCKER_STACK_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
 
     build-and-push-image:
         runs-on: ubuntu-latest
@@ -65,6 +65,7 @@ jobs:
             - prepare-env
         env:
             REPO_NAME: ${{ steps.set_repo.outputs.repo_name }}
+            DOCKER_STACK_NAME: ${{ steps.set_repo.outputs.DOCKER_STACK_NAME }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -77,7 +78,7 @@ jobs:
               uses: cssnr/stack-deploy-action@v1
               with:
                   mode: swarm
-                  name: ${{ env.DOCKER_STACKE_NAME }}
+                  name: ${{ env.DOCKER_STACK_NAME }}
                   file: docker-stack.yaml
                   host: ${{ env.HOST }}
                   user: ${{ env.DEPLOY_USER }}
