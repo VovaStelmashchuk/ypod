@@ -1,8 +1,6 @@
 <template>
     <div class="podcast">
-        <NuxtLink to="/" style="text-decoration: none">
-            <h1 class="podcast__title">{{ data.showName }}</h1>
-        </NuxtLink>
+        <h1 class="podcast__title">{{ data.showName }}</h1>
         <div class="main__grid">
             <MainButton
                 v-for="link in data.links"

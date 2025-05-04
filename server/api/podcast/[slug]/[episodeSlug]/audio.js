@@ -1,7 +1,12 @@
 import { connectDB } from '~/server/db/mongo'
-import { BUCKET, openDownloadStream } from '~/server/utils/files'
+import {
+    BUCKET,
+    getFileSizeInByte,
+    openDownloadStream
+} from '~/server/utils/files'
 
 export default defineEventHandler(async (event) => {
+    const method = event.node.req.method
     const showSlug = getRouterParam(event, 'slug')
     const episodeSlug = getRouterParam(event, 'episodeSlug')
 
@@ -19,11 +24,17 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    const readStream = await openDownloadStream(BUCKET.audio, audio)
+    const fileLength = await getFileSizeInByte(BUCKET.audio, audio)
 
     setResponseHeaders(event, {
         'Content-Type': 'audio/mpeg',
-        'Cache-Control': 'public, max-age=86400' // Cache for 1 day
+        'Cache-Control': 'public, max-age=86400',
+        'Accept-Ranges': 'bytes',
+        'Content-Length': String(fileLength)
     })
+    if (method === 'HEAD') {
+        return ''
+    }
+    const readStream = await openDownloadStream(BUCKET.audio, audio)
     return readStream
 })
