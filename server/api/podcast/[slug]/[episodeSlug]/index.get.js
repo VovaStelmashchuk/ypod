@@ -25,6 +25,6 @@ export default defineEventHandler(async (event) => {
         description: episode.shortDescription,
         title: episode.title,
         youtubeVideoId: episode.youtubeVideoId,
-        audioUrl: `/api/podcast/${showSlug}/${episodeSlug}/audio`
+        audioUrl: `/api/podcast/${showSlug}/${episodeSlug}/audio.mp3`
     }
 })

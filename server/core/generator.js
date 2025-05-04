@@ -83,7 +83,7 @@ export async function updateRss(showSlug) {
             guid: guid,
             date: date,
             enclosure: {
-                url: `${baseUrl}/api/podcast/${showSlug}/${post.slug}/audio`,
+                url: `${baseUrl}/api/podcast/${showSlug}/${post.slug}/audio.mp3`,
                 size: fileSizes[index]
             },
             itunesTitle: post.title,
