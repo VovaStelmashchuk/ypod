@@ -23,36 +23,6 @@ export async function getAvatarBucket() {
     return avatarBucket
 }
 
-let podcastThumbnailBucket
-
-/**
- * @returns {Promise<GridFSBucket>}
- */
-export async function getPodcastImageBucket() {
-    await connectDB()
-    if (!podcastThumbnailBucket) {
-        podcastThumbnailBucket = new GridFSBucket(db, {
-            bucketName: 'thumbnails'
-        })
-    }
-    return podcastThumbnailBucket
-}
-
-let podcastAudioBucket
-
-/**
- * @returns {Promise<GridFSBucket>}
- */
-export async function getPodcastAudioBucket() {
-    await connectDB()
-    if (!podcastAudioBucket) {
-        podcastAudioBucket = new GridFSBucket(db, {
-            bucketName: 'audio'
-        })
-    }
-    return podcastAudioBucket
-}
-
 export async function connectDB() {
     if (!client) {
         try {
