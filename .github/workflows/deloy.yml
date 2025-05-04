@@ -28,7 +28,7 @@ jobs:
         needs:
             - prepare-env
         env:
-            REPO_NAME: ${{ needs.build-and-push-image.outputs.repo_name }}
+            REPO_NAME: ${{ steps.set_repo.outputs.repo_name }}
 
         permissions:
             contents: read
@@ -64,7 +64,7 @@ jobs:
             - build-and-push-image
             - prepare-env
         env:
-            REPO_NAME: ${{ needs.build-and-push-image.outputs.repo_name }}
+            REPO_NAME: ${{ steps.set_repo.outputs.repo_name }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
