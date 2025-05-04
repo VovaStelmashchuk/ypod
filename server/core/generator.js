@@ -102,5 +102,5 @@ export async function updateRss(showSlug) {
 
     await db
         .collection('shows')
-        .updateOne({ slug: showSlug }, { $set: { rssdev: xml } })
+        .updateOne({ slug: showSlug }, { $set: { rss: xml } })
 }

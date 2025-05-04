@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const db = await connectDB()
     const show = await db.collection('shows').findOne({ slug: showSlug })
 
-    const rss = show?.rssdev
+    const rss = show?.rss
 
     const readStream = new ReadableStream({
         start(controller) {
