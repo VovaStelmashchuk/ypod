@@ -24,7 +24,7 @@ export async function updateRss(showSlug) {
     const feed = new Podcast({
         title: showInfo.showName,
         description: description,
-        feedUrl: `${baseUrl}/api/${showSlug}/rss.xml`,
+        feedUrl: `${host}/rss.xml`,
         siteUrl: host,
         webMaster: host,
         generator: 'YPod',
