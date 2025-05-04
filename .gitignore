@@ -17,4 +17,6 @@ logs
 
 # Secrets
 .secret.json
+.prod-secret.json
+.secret*.json
 

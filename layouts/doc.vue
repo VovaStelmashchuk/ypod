@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <header class="main__header header">
-            <a href="/"><h1 style="font-weight: 900">KickStart doc</h1></a>
+            <a href="/"><h1 style="font-weight: 900">Ypod</h1></a>
         </header>
 
         <main class="main__content content">

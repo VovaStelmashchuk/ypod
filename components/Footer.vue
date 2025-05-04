@@ -4,7 +4,7 @@
             <ul class="list">
                 <li class="list__item">
                     <a
-                        href="https://github.com/VovaStelmashchuk/kickstart"
+                        href="https://github.com/VovaStelmashchuk/ypod"
                         target="_blank"
                         class="list__link"
                     >

@@ -8,3 +8,7 @@ node_modules
 .tmp
 .secret.json
 .nuxt
+
+.secret.json
+.prod-secret.json
+.secret*.json
