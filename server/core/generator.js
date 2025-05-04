@@ -14,7 +14,7 @@ export async function updateRss(showSlug) {
 
     const host = `https://${showInfo.mainDomain}`
 
-    const logoUrl = `${baseUrl}/api/podcast/${showInfo.slug}/logo`
+    const logoUrl = `${baseUrl}/api/podcast/${showInfo.slug}/logo.jpg`
     const description = showInfo.about
 
     const author = showInfo.author
