@@ -63,9 +63,11 @@ jobs:
         needs:
             - build-and-push-image
             - prepare-env
+
         env:
             REPO_NAME: ${{ steps.set_repo.outputs.repo_name }}
             DOCKER_STACK_NAME: ${{ steps.set_repo.outputs.DOCKER_STACK_NAME }}
+
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
