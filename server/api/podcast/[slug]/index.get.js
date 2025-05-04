@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     const uiModel = episodes.map((episode) => ({
         slug: episode.slug,
         title: episode.title,
-        description: episode.shortDescription,
+        description: episode.description,
         image: `/api/podcast/${slug}/${episode.slug}/thumbnail`
     }))
 
