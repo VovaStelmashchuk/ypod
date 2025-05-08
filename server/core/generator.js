@@ -74,7 +74,9 @@ export async function updateRss(showSlug) {
         let guid = post.youtubeVideoId
 
         let date = post.pubDate
-        const duration = post.duration
+        const duration = Math.round(post.duration)
+
+        console.log('duration', duration, ' position ', post.position)
 
         feed.addItem({
             title: post.title,

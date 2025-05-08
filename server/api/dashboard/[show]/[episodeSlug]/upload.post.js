@@ -36,6 +36,15 @@ export default defineEventHandler(async (event) => {
 
     await uploadFile(BUCKET.audio, audioFileName, fileBuffer)
 
+    await db.collection('episodes').updateOne(
+        { showSlug: show.slug, slug: episodeSlug },
+        {
+            $set: {
+                audio: audioFileName
+            }
+        }
+    )
+
     return {
         status: 200,
         message: 'File uploaded successfully',

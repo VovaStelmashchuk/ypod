@@ -86,17 +86,19 @@ export async function getFileSizeInByte(bucketName, fileName) {
     const file = files[0]
     return file.length
 }
-
-export async function openDownloadStream(bucketName, fileName) {
+/**
+ * @param bucketName {string}
+ * @param fileName {string}
+ * @param options {object} optional { start: Number, end: Number }
+ * @returns {Promise<GridFSBucketReadStream>}
+ */
+export async function openDownloadStream(bucketName, fileName, options = {}) {
     console.info(
-        'Opening download stream for ',
-        fileName,
-        ' in bucket ',
-        bucketName
+        `Opening download stream for ${fileName} in bucket ${bucketName}, options ${options}`
     )
 
     const bucket = await getBucket(bucketName)
-    return bucket.openDownloadStreamByName(fileName)
+    return bucket.openDownloadStreamByName(fileName, options)
 }
 
 /**
