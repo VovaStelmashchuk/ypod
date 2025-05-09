@@ -60,6 +60,7 @@ export default defineEventHandler(async (event) => {
     }
 
     if (method === 'HEAD') {
+        event.node.res.statusCode = 200
         return ''
     }
 
