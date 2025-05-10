@@ -31,7 +31,7 @@ export async function updateRss(showSlug) {
         imageUrl: logoUrl,
         author: author,
         copyright: `© 2020-${currentYear} ${showInfo.showName}`,
-        language: 'ua',
+        language: 'uk',
         categories: ['Technology'],
         pubDate: pubDate,
         ttl: 60,
