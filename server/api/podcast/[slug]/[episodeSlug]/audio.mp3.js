@@ -65,8 +65,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const readStream = await openDownloadStream(BUCKET.audio, audio, {
-        start,
-        end
+        start: start,
+        end: end + 1
     })
     return readStream
 })
