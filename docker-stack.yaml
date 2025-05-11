@@ -10,14 +10,14 @@ services:
         ports:
             - '6002:3000'
         environment:
-            - NUXT_PUBLIC_SECRET_FILE=/run/secrets/ypod-secret
-            - NUXT_PUBLIC_BASE_URL=https://ypod.stelmashchuk.dev
+            - NUXT_PUBLIC_SECRET_FILE=/run/secrets/ypod
+            - NUXT_PUBLIC_BASE_URL=${BASE_URL}
         secrets:
-            - ypod-secret
+            - ypod
         deploy:
             update_config:
                 order: start-first
 
 secrets:
-    ypod-secret:
+    ypod:
         external: true
