@@ -61,6 +61,7 @@ jobs:
               run: |
                   echo "GIT_COMMIT_SHA=${{ github.sha }}" >> ./envfile
                   echo "BASE_URL=${{ env.BASE_URL }}" >> ./envfile
+                  echo "DOCKER_IMAGE=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1
