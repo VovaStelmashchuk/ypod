@@ -23,3 +23,8 @@ export function getRapidApiKey() {
     const config = getConfig()
     return config.rapidApiKey
 }
+
+export function getRapidApiMd5() {
+    const config = getConfig()
+    return config.rapidApiMd5
+}

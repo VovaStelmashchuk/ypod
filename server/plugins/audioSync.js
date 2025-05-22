@@ -1,5 +1,5 @@
 import { connectDB } from '../db/mongo'
-import { getRapidApiKey } from '../utils/config'
+import { getRapidApiKey, getRapidApiMd5 } from '../utils/config'
 import { downloadFile, BUCKET } from '../utils/files'
 
 const rapidApiKey = getRapidApiKey()
@@ -36,11 +36,18 @@ async function syncAudio(db, episode) {
     try {
         const youtubeVideoInfo = await getYoutubeInfo(episode.youtubeVideoId, episode.slug, db)
         const audioDownloadUrl = youtubeVideoInfo.audioUrl
-
         const duration = youtubeVideoInfo.duration
         const audioFileName = `${episode.slug}.mp3`
 
-        await downloadFile(BUCKET.audio, audioFileName, audioDownloadUrl)
+        // Add X-RUN header
+        const xRunHeader = getRapidApiMd5();
+
+        await downloadFile(
+            BUCKET.audio,
+            audioFileName,
+            audioDownloadUrl,
+            { 'X-RUN': xRunHeader }
+        )
 
         await db.collection('episodes').updateOne(
             { slug: episode.slug },
