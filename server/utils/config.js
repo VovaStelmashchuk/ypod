@@ -26,5 +26,5 @@ export function getRapidApiKey() {
 
 export function getRapidApiMd5() {
     const config = getConfig()
-    return config.rapidApiMd5
+    return config.rapidAppNameMD5
 }

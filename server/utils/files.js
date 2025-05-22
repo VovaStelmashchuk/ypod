@@ -29,14 +29,15 @@ async function getBucket(bucketName) {
  * @param filename {string}
  * @param url {string}
  */
-export async function downloadFile(bucketName, filename, url) {
+export async function downloadFile(bucketName, filename, url, headers = {}) {
     console.info(
         `Downloading file from ${url} to bucket ${bucketName} with filename ${filename}`
     )
     const bucket = await getBucket(bucketName)
 
     const response = await $fetch(new URL(url), {
-        responseType: 'arrayBuffer'
+        responseType: 'arrayBuffer',
+        headers: headers
     })
 
     const buffer = Buffer.from(response)

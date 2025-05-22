@@ -33,21 +33,9 @@ export default defineNitroPlugin(async (_) => {
 })
 
 async function syncAudio(db, episode) {
+    const audioFileName = `${episode.slug}.mp3`
     try {
-        const youtubeVideoInfo = await getYoutubeInfo(episode.youtubeVideoId, episode.slug, db)
-        const audioDownloadUrl = youtubeVideoInfo.audioUrl
-        const duration = youtubeVideoInfo.duration
-        const audioFileName = `${episode.slug}.mp3`
-
-        // Add X-RUN header
-        const xRunHeader = getRapidApiMd5();
-
-        await downloadFile(
-            BUCKET.audio,
-            audioFileName,
-            audioDownloadUrl,
-            { 'X-RUN': xRunHeader }
-        )
+        await downoaldAudioFromYoutube(episode.youtubeVideoId, episode.slug, db, audioFileName)
 
         await db.collection('episodes').updateOne(
             { slug: episode.slug },
@@ -55,7 +43,6 @@ async function syncAudio(db, episode) {
                 $set: {
                     audioSyncStatus: 'done',
                     audioSyncError: null,
-                    duration: duration,
                     audio: audioFileName
                 }
             }
@@ -75,18 +62,37 @@ async function syncAudio(db, episode) {
     }
 }
 
-async function getYoutubeInfo(youtubeVideoId, episodeSlug, db) {
-    try {
-        return await getYoutubeLinkByYoutubeToMp3(youtubeVideoId, episodeSlug, db)
-    } catch (error) {
-        await addEpisodeLog(db, episodeSlug, 'error', `Failed to get youtube download link by youtube-to-mp335`);
+async function downoaldAudioFromYoutube(youtubeVideoId, episodeSlug, db, audioFileName) {
+    const downloaders = [
+        {
+            name: 'youtube-to-mp335',
+            fn: () => getYoutubeLinkByYoutubeToMp3(youtubeVideoId, episodeSlug, db, audioFileName)
+        },
+        {
+            name: 'youtube-mp36',
+            fn: () => getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db, audioFileName)
+        },
+        {
+            name: 'youtube-to-mp315',
+            fn: () => getYoutubeLinkByYoutubeMp315(youtubeVideoId, episodeSlug, db, audioFileName)
+        },
+        {
+            name: 'youtube-mp4-mp3-downloader',
+            fn: () => getYoutubeLinkByYoutubeMp4Mp3Downloader(youtubeVideoId, episodeSlug, db, audioFileName)
+        }
+    ]
+
+    for (const downloader of downloaders) {
         try {
-            return await getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db)
+            await addEpisodeLog(db, episodeSlug, 'info', `Trying to get audio using ${downloader.name}`)
+            return await downloader.fn()
         } catch (error) {
-            await addEpisodeLog(db, episodeSlug, 'error', `Failed to get youtube download link by youtube-mp36`);
-            throw error
+            await addEpisodeLog(db, episodeSlug, 'error', `Failed to get youtube download link by ${downloader.name}`)
+            console.log(`Failed to get youtube download link by ${downloader.name}`, error)
         }
     }
+
+    throw new Error('All download methods failed')
 }
 
 //youtube-to-mp335
@@ -111,14 +117,15 @@ async function getYoutubeLinkByYoutubeToMp3(youtubeVideoId, episodeSlug, db) {
 
     await addEpisodeLog(db, episodeSlug, 'info', `Youtube to mp3 response: ${JSON.stringify(youtubeToMp3Response)}`);
 
-    return {
-        audioUrl: youtubeToMp3Response.url,
-        duration: youtubeToMp3Response.duration
-    }
+    await downloadFile(
+        BUCKET.audio,
+        audioFileName,
+        youtubeToMp3Response.url,
+    )
 }
 
 //youtube-mp36
-async function getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db) {
+async function getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db, audioFileName) {
     await addEpisodeLog(db, episodeSlug, 'info', `Getting youtube link by youtube-mp36`);
     const url = `https://youtube-mp36.p.rapidapi.com/dl?id=${youtubeVideoId}`;
     const headers = {
@@ -146,10 +153,15 @@ async function getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db) {
             await addEpisodeLog(db, episodeSlug, 'info', `Attempt ${attempt}: Received response: ${JSON.stringify(response)}`);
 
             if (response.status === 'ok' && response.link) {
-                return {
-                    audioUrl: response.link,
-                    duration: response.duration
-                }
+                const xRunHeader = getRapidApiMd5();
+
+                await downloadFile(
+                    BUCKET.audio,
+                    audioFileName,
+                    response.link,
+                    { 'X-RUN': xRunHeader }
+                )
+                return
             }
 
             // Wait for 1 minute before retrying
@@ -166,6 +178,123 @@ async function getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db) {
     await addEpisodeLog(db, episodeSlug, 'error', `Failed to get youtube-mp36 link after ${maxAttempts} attempts`);
 
     throw new Error('Failed to get youtube-mp36 link after 10 attempts');
+}
+
+// youtube-to-mp315
+async function getYoutubeLinkByYoutubeMp315(youtubeVideoId, episodeSlug, db, audioFileName) {
+    await addEpisodeLog(db, episodeSlug, 'info', `Getting youtube link by youtube-to-mp315`);
+    const url = `https://youtube-to-mp315.p.rapidapi.com/download?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${youtubeVideoId}`)}&format=mp3`;
+    const headers = {
+        'x-rapidapi-key': rapidApiKey,
+        'x-rapidapi-host': 'youtube-to-mp315.p.rapidapi.com',
+        'Content-Type': 'application/json'
+    };
+
+    const maxAttempts = 10;
+    let attempt = 0;
+
+    while (attempt < maxAttempts) {
+        attempt++;
+        await addEpisodeLog(db, episodeSlug, 'info', `youtube-to-mp315: Attempt ${attempt} - Checking conversion status`);
+
+        try {
+            const response = await $fetch(url, {
+                method: 'POST',
+                headers,
+                body: {}
+            });
+
+            let data = response;
+            if (typeof response === 'string') {
+                try {
+                    data = JSON.parse(response);
+                } catch (e) {
+                    await addEpisodeLog(db, episodeSlug, 'error', `youtube-to-mp315: Failed to parse response: ${response}`);
+                    throw new Error('youtube-to-mp315: Invalid response format');
+                }
+            }
+
+            await addEpisodeLog(db, episodeSlug, 'info', `youtube-to-mp315: Response: ${JSON.stringify(data)}`);
+
+            if (data.status === 'AVAILABLE' && data.downloadUrl) {
+                await downloadFile(
+                    BUCKET.audio,
+                    audioFileName,
+                    data.downloadUrl
+                );
+                return;
+            } else if (data.status === 'EXPIRED' || data.status === 'CONVERSION_ERROR') {
+                throw new Error(`youtube-to-mp315: Conversion failed with status ${data.status}`);
+            }
+
+            // Wait for 1 minute before retrying
+            await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
+        } catch (error) {
+            await addEpisodeLog(db, episodeSlug, 'error', `youtube-to-mp315: Error occurred: ${error.message}`);
+            await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
+        }
+    }
+
+    await addEpisodeLog(db, episodeSlug, 'error', `youtube-to-mp315: Failed to get AVAILABLE status after ${maxAttempts} attempts`);
+    throw new Error('youtube-to-mp315: Failed to get AVAILABLE status after 10 attempts');
+}
+
+async function getYoutubeLinkByYoutubeMp4Mp3Downloader(youtubeVideoId, episodeSlug, db, audioFileName) {
+    await addEpisodeLog(db, episodeSlug, 'info', `Getting youtube link by youtube-mp4-mp3-downloader`);
+
+    const url = `https://youtube-mp4-mp3-downloader.p.rapidapi.com/api/v1/download?format=mp3&id=${youtubeVideoId}&audioQuality=320&addInfo=false`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': getRapidApiKey(),
+            'x-rapidapi-host': 'youtube-mp4-mp3-downloader.p.rapidapi.com'
+        }
+    };
+
+
+    try {
+        const response = await $fetch(url, options);
+        const progressId = response.progressId;
+        const maxAttempts = 10;
+        const waitTimeMs = 60 * 1000; // 1 minute
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            await addEpisodeLog(db, episodeSlug, 'info', `youtube-mp4-mp3-downloader: Checking progress attempt ${attempt}/${maxAttempts}`);
+
+            try {
+                const progressUrl = `https://youtube-mp4-mp3-downloader.p.rapidapi.com/api/v1/progress?id=${progressId}`;
+                const progressResponse = await $fetch(progressUrl, options);
+
+                await addEpisodeLog(db, episodeSlug, 'info', `youtube-mp4-mp3-downloader: Progress response: ${JSON.stringify(progressResponse)}`);
+
+                if (progressResponse.finished && progressResponse.downloadUrl) {
+                    await downloadFile(
+                        BUCKET.audio,
+                        audioFileName,
+                        progressResponse.downloadUrl
+                    );
+                    return;
+                }
+
+                if (attempt < maxAttempts) {
+                    await addEpisodeLog(db, episodeSlug, 'info', `youtube-mp4-mp3-downloader: Waiting ${waitTimeMs / 1000} seconds before next attempt`);
+                    await new Promise((resolve) => setTimeout(resolve, waitTimeMs));
+                }
+            } catch (error) {
+                await addEpisodeLog(db, episodeSlug, 'error', `youtube-mp4-mp3-downloader: Progress check error: ${error.message}`);
+                if (attempt < maxAttempts) {
+                    await new Promise((resolve) => setTimeout(resolve, waitTimeMs));
+                }
+            }
+        }
+
+        await addEpisodeLog(db, episodeSlug, 'error', `youtube-mp4-mp3-downloader: Failed to get download URL after ${maxAttempts} attempts`);
+
+        throw new Error(`youtube-mp4-mp3-downloader: Failed with status ${data.status}`);
+    } catch (error) {
+        await addEpisodeLog(db, episodeSlug, 'error', `youtube-mp4-mp3-downloader: Error occurred: ${error.message}`);
+        throw error;
+    }
 }
 
 async function addEpisodeLog(db, episodeSlug, type, message) {

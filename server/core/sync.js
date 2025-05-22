@@ -13,6 +13,12 @@ export async function syncPlayList(showSlug) {
 
     const originPlaylistItems = await getPlaylistItems(playlistId)
 
+    let isFirst = true
+
+    // Get all video IDs and fetch their durations
+    const videoIds = originPlaylistItems.map(item => item.snippet.resourceId.videoId);
+    const durations = await getVideoDurations(videoIds);
+
     const playlistItems = originPlaylistItems.map((item) => {
         let thumbnail = item.snippet.thumbnails.maxres
         if (!thumbnail) {
@@ -21,12 +27,20 @@ export async function syncPlayList(showSlug) {
         if (!thumbnail) {
             console.error('Thumbnails not found', item.snippet)
         }
+        if (isFirst) {
+            console.log(item)
+            isFirst = false
+        }
+        const videoId = item.snippet.resourceId.videoId;
+        const isoDuration = durations[videoId];
         return {
             title: item.snippet.title,
-            youtubeVideoId: item.snippet.resourceId.videoId,
+            youtubeVideoId: videoId,
             position: item.snippet.position,
             description: item.snippet.description,
-            thumbnailUrl: thumbnail?.url
+            thumbnailUrl: thumbnail?.url,
+            youtubeDuration: isoDuration,
+            duration: parseISO8601Duration(isoDuration)
         }
     })
 
@@ -66,7 +80,9 @@ async function createVideo(db, showSlug, video) {
         position: video.position,
         description: video.description,
         imageSyncStatus: 'pending',
-        audioSyncStatus: 'pending'
+        audioSyncStatus: 'pending',
+        youtubeDuration: video.youtubeDuration,
+        duration: video.duration
     })
 }
 
@@ -79,7 +95,9 @@ async function updateVideo(db, video) {
                 title: video.title,
                 thumbnailUrl: video.thumbnailUrl,
                 position: video.position,
-                description: video.description
+                description: video.description,
+                youtubeDuration: video.youtubeDuration,
+                duration: video.duration
             }
         }
     )
@@ -112,4 +130,35 @@ async function getPlaylistPage(playlistId, nextPageToken) {
     })
 
     return response.data
+}
+
+// Helper to fetch durations
+async function getVideoDurations(youtubeVideoIds) {
+    if (!youtubeVideoIds.length) return {};
+    const youtube = google.youtube({
+        version: 'v3',
+        auth: youtubeApiKey
+    });
+
+    const result = {};
+    for (let i = 0; i < youtubeVideoIds.length; i += 50) {
+        const ids = youtubeVideoIds.slice(i, i + 50);
+        const response = await youtube.videos.list({
+            part: ['contentDetails'],
+            id: ids
+        });
+        for (const item of response.data.items) {
+            result[item.id] = item.contentDetails.duration;
+        }
+    }
+    return result;
+}
+
+function parseISO8601Duration(duration) {
+    const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return 0;
+    const hours = parseInt(match[1] || '0', 10);
+    const minutes = parseInt(match[2] || '0', 10);
+    const seconds = parseInt(match[3] || '0', 10);
+    return hours * 3600 + minutes * 60 + seconds;
 }
