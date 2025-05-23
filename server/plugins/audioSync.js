@@ -303,9 +303,12 @@ async function addEpisodeLog(db, episodeSlug, type, message) {
         {
             $push: {
                 logs: {
-                    timestamp: new Date(),
-                    type,
-                    message
+                    $each: [{
+                        timestamp: new Date(),
+                        type,
+                        message
+                    }],
+                    $slice: -50 // Keep only the last 50 items
                 }
             }
         }
