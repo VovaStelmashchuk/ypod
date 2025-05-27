@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
     app:
@@ -7,7 +7,7 @@ services:
             - 8.8.8.8
             - 8.8.4.4
         ports:
-            - '6002:3000'
+            - "6002:3000"
         environment:
             - NUXT_PUBLIC_SECRET_FILE=/run/secrets/ypod
             - NUXT_PUBLIC_BASE_URL=https://ypod.stelmashchuk.dev
@@ -20,4 +20,8 @@ services:
             - infra_reverse-proxy
 secrets:
     ypod:
+        external: true
+
+networks:
+    infra_reverse-proxy:
         external: true
