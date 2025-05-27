@@ -3,7 +3,6 @@ version: '3.8'
 services:
     app:
         image: ghcr.io/${DOCKER_IMAGE}:${GIT_COMMIT_SHA:-latest}
-        network_mode: 'host'
         dns:
             - 8.8.8.8
             - 8.8.4.4
@@ -11,13 +10,14 @@ services:
             - '6002:3000'
         environment:
             - NUXT_PUBLIC_SECRET_FILE=/run/secrets/ypod
-            - NUXT_PUBLIC_BASE_URL=${BASE_URL}
+            - NUXT_PUBLIC_BASE_URL=https://ypod.stelmashchuk.dev
         secrets:
             - ypod
         deploy:
             update_config:
                 order: start-first
-
+        networks:
+            - infra_reverse-proxy
 secrets:
     ypod:
         external: true
