@@ -61,7 +61,7 @@ jobs:
             - name: Docker Stack Deploy
               uses: cssnr/stack-deploy-action@v1
               with:
-                  name: ${{ env.DOCKER_STACKE_NAME }}
+                  name: ${{ env.DOCKER_STACK_NAME }}
                   file: docker-stack.yaml
                   host: ${{ env.HOST }}
                   user: ${{ env.DEPLOY_USER }}
