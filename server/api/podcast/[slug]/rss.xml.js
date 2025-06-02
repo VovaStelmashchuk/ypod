@@ -6,6 +6,8 @@ export default defineEventHandler(async (event) => {
     const db = await connectDB()
     const show = await db.collection('shows').findOne({ slug: showSlug })
 
+    await db.collection('shows').updateOne({ slug: showSlug }, { $inc: { rssDownloadCount: 1 } })
+
     const rss = show?.rss
 
     setResponseHeaders(event, {
