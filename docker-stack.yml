@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  app:
+    image: ghcr.io/${DOCKER_IMAGE}:${GIT_COMMIT_SHA:-latest}
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    ports:
+      - 6002:3000
+    environment:
+      - NUXT_PUBLIC_BASE_URL=https://ypod.stelmashchuk.dev
+    secrets:
+      - source: ypod_mongo_uri
+        target: mongo_uri
+      - source: ypod_google_client_id
+        target: google_client_id
+      - source: ypod_youtube_api_key
+        target: youtube_api_key
+      - source: ypod_rapid_api_key
+        target: rapid_api_key
+      - source: ypod_rapid_app_name_md5
+        target: rapid_app_name_md5
+    deploy:
+      update_config:
+        order: start-first
+    networks:
+      - infra_reverse-proxy
+      - infra_mongo
+secrets:
+  ypod_mongo_uri:
+    external: true
+  ypod_google_client_id:
+    external: true
+  ypod_youtube_api_key:
+    external: true
+  ypod_rapid_api_key:
+    external: true
+  ypod_rapid_app_name_md5:
+    external: true
+networks:
+  infra_reverse-proxy:
+    external: true
+  infra_mongo:
+    external: true
