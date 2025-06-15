@@ -15,10 +15,5 @@ logs
 .fleet
 .idea
 
-.env
 # Secrets
-.secret.json
-.prod-secret.json
-.secret*.json
-
-
+.env

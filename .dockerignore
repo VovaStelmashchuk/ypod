@@ -9,6 +9,4 @@ node_modules
 .secret.json
 .nuxt
 
-.secret.json
-.prod-secret.json
-.secret*.json
+.env
