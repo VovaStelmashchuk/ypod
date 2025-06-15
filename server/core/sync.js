@@ -1,9 +1,8 @@
 import standardSlugify from 'standard-slugify'
 import { connectDB } from '../db/mongo'
-import { getYoutubeApiKey } from '../utils/config'
 import { google } from 'googleapis'
 
-const youtubeApiKey = getYoutubeApiKey()
+const youtubeApiKey = useRuntimeConfig().youtubeApiKey
 
 export async function syncPlayList(showSlug) {
     const db = await connectDB()

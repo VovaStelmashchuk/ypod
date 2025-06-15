@@ -1,8 +1,7 @@
 import { connectDB } from '../db/mongo'
-import { getRapidApiKey, getRapidApiMd5 } from '../utils/config'
 import { downloadFile, BUCKET } from '../utils/files'
 
-const rapidApiKey = getRapidApiKey()
+const rapidApiKey = useRuntimeConfig().rapidApiKey
 
 export default defineNitroPlugin(async (_) => {
     console.info(
@@ -153,7 +152,7 @@ async function getYoutubeLinkByYoutubeMp36(youtubeVideoId, episodeSlug, db, audi
             await addEpisodeLog(db, episodeSlug, 'info', `Attempt ${attempt}: Received response: ${JSON.stringify(response)}`);
 
             if (response.status === 'ok' && response.link) {
-                const xRunHeader = getRapidApiMd5();
+                const xRunHeader = useRuntimeConfig().rapidAppNameMd5;
 
                 await downloadFile(
                     BUCKET.audio,
@@ -246,7 +245,7 @@ async function getYoutubeLinkByYoutubeMp4Mp3Downloader(youtubeVideoId, episodeSl
     const options = {
         method: 'GET',
         headers: {
-            'x-rapidapi-key': getRapidApiKey(),
+            'x-rapidapi-key': useRuntimeConfig().rapidApiKey,
             'x-rapidapi-host': 'youtube-mp4-mp3-downloader.p.rapidapi.com'
         }
     };

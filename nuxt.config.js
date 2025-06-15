@@ -4,8 +4,12 @@ export default defineNuxtConfig({
         enabled: true
     },
     runtimeConfig: {
+        mongoUri: '',
+        googleClientId: '',
+        youtubeApiKey: '',
+        rapidApiKey: '',
+        rapidAppNameMd5: '',
         public: {
-            secretFile: '.secret.json',
             baseUrl: 'http://localhost:3000',
             gitCommitSha: ''
         }

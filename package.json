@@ -11,19 +11,20 @@
     },
     "dependencies": {
         "eris": "^0.18.0",
+        "googleapis": "^73.0.0",
         "mongodb": "6.8",
         "nuxt": "^3.15.0",
+        "podcast": "^2.0.1",
         "standard-slugify": "^4.0.0",
         "vite": "^6.0.6",
         "vue": "latest",
-        "vue-router": "latest",
-        "googleapis": "^73.0.0",
-        "podcast": "^2.0.1"
+        "vue-router": "latest"
     },
     "devDependencies": {
+        "@nuxt/devtools": "latest",
+        "kickstart-scripts": "^1.0.1",
         "postinstall-postinstall": "^2.1.0",
         "prettier": "3.5.3",
-        "sass": "1.77.6",
-        "@nuxt/devtools": "latest"
+        "sass": "1.77.6"
     }
 }

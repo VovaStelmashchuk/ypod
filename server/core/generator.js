@@ -1,10 +1,9 @@
 import { Podcast } from 'podcast'
 
-import { getBaseUrl } from '~/server/utils/config.js'
 import { connectDB } from '~/server/db/mongo.js'
 import { getFileSizeInByte, BUCKET } from '../utils/files'
 
-const baseUrl = getBaseUrl()
+const baseUrl = useRuntimeConfig().public.baseUrl
 
 const currentYear = new Date().getFullYear()
 

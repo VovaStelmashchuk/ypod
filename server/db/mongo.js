@@ -1,7 +1,6 @@
 import { MongoClient, GridFSBucket } from 'mongodb'
-import { getConfig } from '../utils/config'
 
-const uri = getConfig().mongoUri
+const uri = useRuntimeConfig().mongoUri
 
 let client
 /**
