@@ -38,3 +38,15 @@ export async function connectDB() {
     }
     return db
 }
+
+export async function checkMongoHealth() {
+    try {
+        const db = await connectDB()
+        await db.command({ ping: 1 })
+        console.log('MongoDB health check passed')
+        return true
+    } catch (error) {
+        console.error('MongoDB health check failed:', error)
+        return false
+    }
+}
