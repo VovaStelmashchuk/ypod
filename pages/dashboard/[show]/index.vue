@@ -5,30 +5,17 @@
         </NuxtLink>
     </div>
     <div class="podcast__sync-block">
-        <MainButton
-            :theme="buttonThemeType.primary"
-            label="Sync with youtube playlist"
-            class="podcast__sync-button"
-            @click="syncPlaylist"
-        />
+        <MainButton :theme="buttonThemeType.primary" label="Sync with youtube playlist" class="podcast__sync-button"
+            @click="syncPlaylist" />
         <div style="--loader-size: 16px" v-if="isSyncInProgress">
             <MainLoader />
         </div>
     </div>
     <div class="main__grid">
-        <div v-for="episode in data.episodes">
-            <img
-                :src="episode.image"
-                alt="Podcast logo"
-                style="
-                    width: 100%;
-                    height: auto;
-                    margin: 0;
-                    border-radius: 1rem;
-                "
-            />
-            <p>{{ episode.title }}</p>
-        </div>
+        <NuxtLink v-for="episode in data.episodes" :to="`/dashboard/${showSlug}/${episode.slug}`" class="episode-card">
+            <img :src="episode.image" alt="Podcast logo" class="episode-card__image" />
+            <p class="episode-card__title">{{ episode.title }}</p>
+        </NuxtLink>
     </div>
 </template>
 
@@ -63,8 +50,34 @@ const syncPlaylist = async () => {
         align-items: center;
         gap: 8px;
     }
+
     &__sync-button {
         margin: 8px 0;
+    }
+}
+
+.episode-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-4px);
+        opacity: 0.9;
+    }
+
+    &__image {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        border-radius: 1rem;
+    }
+
+    &__title {
+        margin-top: 8px;
+        font-weight: 500;
     }
 }
 </style>

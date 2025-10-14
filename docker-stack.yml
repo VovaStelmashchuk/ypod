@@ -16,10 +16,6 @@ services:
         target: google_client_id
       - source: ypod_youtube_api_key
         target: youtube_api_key
-      - source: ypod_rapid_api_key
-        target: rapid_api_key
-      - source: ypod_rapid_app_name_md5
-        target: rapid_app_name_md5
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/service/health"]
       interval: 30s
@@ -43,10 +39,6 @@ secrets:
   ypod_google_client_id:
     external: true
   ypod_youtube_api_key:
-    external: true
-  ypod_rapid_api_key:
-    external: true
-  ypod_rapid_app_name_md5:
     external: true
 networks:
   infra_reverse-proxy:

@@ -27,7 +27,7 @@
         </p>
     </div>
 </template>
-<script>
+<script setup>
 definePageMeta({
     layout: 'doc'
 })
@@ -37,9 +37,11 @@ definePageMeta({
     h1 {
         margin-bottom: 0.5rem;
     }
+
     h2 {
         margin-bottom: 0.5rem;
     }
+
     p {
         margin-bottom: 0.5rem;
     }

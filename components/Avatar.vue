@@ -1,17 +1,14 @@
 <template>
     <component :is="avatarTag" v-bind="avatarHref" class="avatar">
-        <img
-            :class="avatarClasses"
-            :src="user.avatar"
-            :alt="user.name"
-            class="avatar__img"
-        />
+        <img v-if="user.avatar" :class="avatarClasses" :src="user.avatar" :alt="user.name || 'User avatar'"
+            class="avatar__img" />
     </component>
 </template>
 <script setup>
 import { NuxtLink } from '#components'
 import { computed, unref } from 'vue'
 import { defaultAvatarSizeType } from '~~/constants/avatar.constants'
+import { authStore } from '~~/composables/auth'
 
 const { size } = defineProps({
     size: {
@@ -47,6 +44,7 @@ const user = computed(() => getters.user)
             width: 40px;
             height: 40px;
         }
+
         &--size-m {
             width: 140px;
             height: 140px;

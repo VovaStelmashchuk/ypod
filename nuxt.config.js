@@ -7,8 +7,6 @@ export default defineNuxtConfig({
         mongoUri: '',
         googleClientId: '',
         youtubeApiKey: '',
-        rapidApiKey: '',
-        rapidAppNameMd5: '',
         public: {
             baseUrl: 'http://localhost:3000',
             gitCommitSha: ''
