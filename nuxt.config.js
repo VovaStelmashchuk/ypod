@@ -68,7 +68,10 @@ export default defineNuxtConfig({
         experimental: {
             websocket: true
         },
-        compressPublicAssets: true
+        compressPublicAssets: true,
+        experimental: {
+            bodySizeLimit: 100 * 1024 * 1024
+        }
     },
     experimental: { appManifest: false },
     build: {
