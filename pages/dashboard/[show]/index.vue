@@ -20,6 +20,11 @@
         <div style="--loader-size: 16px" v-if="isSyncInProgress">
             <MainLoader />
         </div>
+        <MainButton :theme="buttonThemeType.primary" label="Update RSS" class="podcast__sync-button"
+            @click="updateRSS" />
+        <div style="--loader-size: 16px" v-if="isRssUpdateInProgress">
+            <MainLoader />
+        </div>
     </div>
     <div class="main__grid">
         <NuxtLink v-for="episode in data.episodes" :to="`/dashboard/${showSlug}/${episode.slug}`" class="episode-card">
@@ -43,6 +48,7 @@ const { data } = await useFetch(`/api/dashboard/${showSlug}/episodes`)
 
 const isSyncInProgress = ref(false)
 const isLogoUploading = ref(false)
+const isRssUpdateInProgress = ref(false)
 const logoInput = ref(null)
 
 const handleLogoUpload = async (event) => {
@@ -78,6 +84,19 @@ const syncPlaylist = async () => {
         method: 'POST'
     })
     isSyncInProgress.value = false
+}
+
+const updateRSS = async () => {
+    isRssUpdateInProgress.value = true
+    try {
+        await $fetch(`/api/dashboard/${showSlug}/rss-update`, {
+            method: 'POST'
+        })
+    } catch (error) {
+        console.error('Error updating RSS:', error)
+    } finally {
+        isRssUpdateInProgress.value = false
+    }
 }
 </script>
 
