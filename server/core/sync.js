@@ -32,6 +32,7 @@ export async function syncPlayList(showSlug) {
         }
         const videoId = item.snippet.resourceId.videoId;
         const isoDuration = durations[videoId];
+
         return {
             title: item.snippet.title,
             youtubeVideoId: videoId,
@@ -39,7 +40,8 @@ export async function syncPlayList(showSlug) {
             description: item.snippet.description,
             thumbnailUrl: thumbnail?.url,
             youtubeDuration: isoDuration,
-            duration: parseISO8601Duration(isoDuration)
+            duration: parseISO8601Duration(isoDuration),
+            pubDate: item.snippet.publishedAt
         }
     })
 
@@ -96,7 +98,8 @@ async function updateVideo(db, video) {
                 position: video.position,
                 description: video.description,
                 youtubeDuration: video.youtubeDuration,
-                duration: video.duration
+                duration: video.duration,
+                pubDate: video.pubDate
             }
         }
     )
