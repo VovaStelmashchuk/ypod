@@ -1,7 +1,6 @@
 <template>
-    <component :is="avatarTag" v-bind="avatarHref" class="avatar">
-        <img v-if="user.avatar" :class="avatarClasses" :src="user.avatar" :alt="user.name || 'User avatar'"
-            class="avatar__img" />
+    <component :is="avatarTag" v-bind="avatarHref">
+        <img v-if="user.avatar" :class="avatarClasses" :src="user.avatar" :alt="user.name || 'User avatar'" />
     </component>
 </template>
 <script setup>
@@ -19,9 +18,12 @@ const { size } = defineProps({
 
 const route = useRoute()
 
-const avatarClasses = computed(() => ({
-    [`avatar__img--size-${unref(size)}`]: Boolean(unref(size))
-}))
+const avatarClasses = computed(() => {
+    const s = unref(size)
+    const sizeClass = s === 's' ? 'w-10 h-10' : s === 'm' ? 'w-35 h-35' : 'w-10 h-10'
+    return `rounded-full ${sizeClass}`
+})
+
 const isProfilePage = computed(() => {
     return route.path === '/profile'
 })
@@ -35,20 +37,3 @@ const avatarHref = computed(() => {
 const { getters } = authStore
 const user = computed(() => getters.user)
 </script>
-<style lang="scss" scoped>
-.avatar {
-    &__img {
-        border-radius: 100px;
-
-        &--size-s {
-            width: 40px;
-            height: 40px;
-        }
-
-        &--size-m {
-            width: 140px;
-            height: 140px;
-        }
-    }
-}
-</style>

@@ -7,7 +7,9 @@ const state = reactive({
 })
 async function setUser() {
     try {
-        const { data } = await useFetch('/api/user')
+        const { data } = await useFetch('/api/user', {
+            credentials: 'include'
+        })
         const userData = unref(data)
         if (userData && Boolean(userData.id)) {
             state.user = userData

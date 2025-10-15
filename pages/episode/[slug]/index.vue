@@ -1,34 +1,24 @@
 <template>
-    <div class="podcast">
+    <div>
         <NuxtLink to="/">
-            <h1 class="podcast__title">{{ data.showName }}</h1>
+            <h1 class="p-5 text-center text-4xl font-bold text-gray-900">{{ data.showName }}</h1>
         </NuxtLink>
-        <div class="main__grid">
-            <MainButton
-                v-for="link in data.links"
-                :theme="buttonThemeType.primary"
-                :label="link.text"
-                :href="link.link"
-                tag="a"
-                target="_blank"
-                class="podcast__link-button"
-            />
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
+            <MainButton v-for="link in data.links" :theme="buttonThemeType.primary" :label="link.text" :href="link.link"
+                tag="a" target="_blank" class="w-full text-center" />
         </div>
-        <h2 class="podcast__title">{{ data.title }}</h2>
-        <div class="podcast__content">
-            <div class="videoWrapper">
-                <iframe
-                    :src="`https://www.youtube.com/embed/${data.youtubeVideoId}`"
-                    :title="`${data.title}`"
+        <h2 class="p-5 text-center text-3xl font-semibold text-gray-900">{{ data.title }}</h2>
+        <div class="mt-5">
+            <div class="relative pb-[56.25%] pt-6 h-0">
+                <iframe :src="`https://www.youtube.com/embed/${data.youtubeVideoId}`" :title="`${data.title}`"
                     frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin"
-                    allowfullscreen
-                ></iframe>
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                    class="absolute top-0 left-0 w-full h-full"></iframe>
             </div>
         </div>
-        <p style="margin-top: 24px">{{ data.description }}</p>
-        <audio style="margin-top: 24px" controls :src="data.audioUrl"></audio>
+        <p class="mt-6 text-base text-gray-900">{{ data.description }}</p>
+        <audio class="mt-6 w-full" controls :src="data.audioUrl"></audio>
     </div>
 </template>
 
@@ -41,36 +31,3 @@ const slug = route.params.slug
 
 const { data } = await useFetch(`/api/podcast/--auto-slug--/${slug}`)
 </script>
-
-<style lang="scss" scoped>
-.videoWrapper {
-    position: relative;
-    padding-bottom: 56.25%;
-    /* 16:9 */
-    padding-top: 25px;
-    height: 0;
-}
-
-.videoWrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-.podcast {
-    &__title {
-        padding: 20px;
-        text-align: center;
-    }
-
-    &__link-button {
-        width: 100%;
-        text-align: center;
-    }
-
-    &__content {
-        margin-top: 20px;
-    }
-}
-</style>

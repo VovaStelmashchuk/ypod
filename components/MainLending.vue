@@ -1,42 +1,38 @@
 <template>
-    <div class="main">
-        <header class="main__header header">
-            <NuxtLink to="/" style="text-decoration: none">
-                <h1 style="font-weight: 900">Ypod</h1>
+    <div>
+        <header class="flex justify-between items-center pt-5">
+            <NuxtLink to="/" class="no-underline">
+                <h1 class="text-4xl font-black text-gray-900">Ypod</h1>
             </NuxtLink>
 
-            <MainButton
-                :theme="buttonThemeType.primary"
-                :size="buttonSizeType.l"
-                label="Login / Sign Up"
-                @click="loginDialog = true"
-                class="header__login-button"
-            />
+            <MainButton :theme="buttonThemeType.primary" :size="buttonSizeType.l" label="Login / Sign Up"
+                @click="loginDialog = true" />
             <LoginView v-model:isModalOpen="loginDialog" />
         </header>
-        <section>
-            <h1>Ypod - make podcast from youtube playlist</h1>
-            <p>
+
+        <section class="p-8">
+            <h1 class="text-4xl font-bold text-center my-6 text-gray-900">Ypod - make podcast from youtube playlist</h1>
+            <p class="text-base text-center my-4 text-gray-900">
                 Just mirror audio tracks from youtube playlist to simple webpage
                 and rss
             </p>
         </section>
 
-        <section id="features">
-            <h2>Setup podcast in a minute</h2>
-            <p>
+        <section id="features" class="p-8">
+            <h2 class="text-3xl font-semibold text-center my-4 text-gray-900">Setup podcast in a minute</h2>
+            <p class="text-base text-center my-4 text-gray-900">
                 Provide a link to youtube playlist and we setup podcast for you
             </p>
-            <div class="main__grid">
-                <div class="main__border">
-                    <h5>Simple webpage</h5>
-                    <p style="text-align: left">
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
+                <div class="border border-gray-300 rounded-lg p-4">
+                    <h5 class="text-xl font-bold text-left m-0 text-gray-900">Simple webpage</h5>
+                    <p class="text-base text-left my-4 text-gray-900">
                         Simple webpage with list of episode
                     </p>
                 </div>
-                <div class="main__border">
-                    <h5>RSS</h5>
-                    <p style="text-align: left">
+                <div class="border border-gray-300 rounded-lg p-4">
+                    <h5 class="text-xl font-bold text-left m-0 text-gray-900">RSS</h5>
+                    <p class="text-base text-left my-4 text-gray-900">
                         RSS feed for your podcast, which works with any podcast
                         application
                     </p>
@@ -44,16 +40,11 @@
             </div>
         </section>
 
-        <section id="get-started">
-            <h3>Get Started</h3>
-            <p>Ready to dive in? Login I will contact you via email</p>
-            <MainButton
-                :theme="buttonThemeType.primary"
-                :size="buttonSizeType.l"
-                label="Get started"
-                @click="loginDialog = true"
-                class="main__login-button"
-            />
+        <section id="get-started" class="p-8">
+            <h3 class="text-2xl font-bold text-center my-4 text-gray-900">Get Started</h3>
+            <p class="text-base text-center my-4 text-gray-900">Ready to dive in? Login I will contact you via email</p>
+            <MainButton :theme="buttonThemeType.primary" :size="buttonSizeType.l" label="Get started"
+                @click="loginDialog = true" class="mx-auto" />
         </section>
     </div>
 </template>
@@ -62,66 +53,3 @@
 import { buttonSizeType, buttonThemeType } from '~~/constants/button.constants'
 const loginDialog = useLoginDialog()
 </script>
-
-<style lang="scss">
-.main {
-    section {
-        &__header {
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 1300px;
-            width: 100%;
-        }
-        padding: 2rem;
-
-        h1 {
-            text-align: center;
-            margin: 1.5rem 0;
-        }
-
-        h2 {
-            text-align: center;
-            margin: 1rem 0;
-        }
-
-        h3 {
-            text-align: center;
-            margin: 1rem 0;
-        }
-
-        h4 {
-            text-align: center;
-            margin: 1rem 0;
-        }
-
-        h5 {
-            text-align: left;
-            margin: 0 0;
-        }
-
-        p {
-            margin: 1rem 0;
-            text-align: center;
-        }
-    }
-
-    ul {
-        li {
-            margin: 0.5rem 0;
-        }
-    }
-
-    &__login-button {
-        margin: 0 auto;
-    }
-
-    &__header {
-        padding-top: 20px;
-    }
-}
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-</style>

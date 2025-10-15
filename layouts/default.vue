@@ -1,6 +1,6 @@
 <template>
-    <div class="main">
-        <main class="main__content content">
+    <div class="bg-gray-50 flex-col flex min-h-screen">
+        <main class="flex-grow mx-auto max-w-7xl w-full px-4">
             <slot />
         </main>
 
@@ -9,26 +9,3 @@
 </template>
 
 <script setup lang="js"></script>
-<style lang="scss" scoped>
-.main {
-    background-color: var(--background-primary);
-    flex-direction: column;
-    display: flex;
-    min-height: 100vh;
-
-    &__content {
-        flex-grow: 1;
-        margin: 0 auto;
-        max-width: 1300px;
-        width: 100%;
-    }
-    &__line {
-        position: relative;
-        z-index: 2;
-    }
-}
-.content {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-</style>

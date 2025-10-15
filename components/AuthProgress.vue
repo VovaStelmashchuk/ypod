@@ -1,24 +1,8 @@
 <template>
-    <div class="authenticating">
-        <h2>Authenticating...</h2>
-        <MainLoader class="authenticating__loader" />
-        <p>Please wait a moment while we process your authentication.</p>
+    <div class="text-center flex items-center justify-center flex-col">
+        <h2 class="text-3xl font-semibold text-gray-900">Authenticating...</h2>
+        <MainLoader class="mt-5 mb-10 w-30 h-30" />
+        <p class="text-base text-gray-900">Please wait a moment while we process your authentication.</p>
     </div>
 </template>
 <script setup></script>
-<style lang="scss" scoped>
-.authenticating {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
-    &__loader {
-        margin-top: 20px;
-        margin-bottom: 40px;
-        width: 120px;
-        height: 120px;
-    }
-}
-</style>

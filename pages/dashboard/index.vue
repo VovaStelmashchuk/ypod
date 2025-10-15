@@ -1,6 +1,7 @@
 <template>
-    <div class="main__grid">
-        <NuxtLink :to="`/dashboard/${show.slug}`" v-for="show in data.shows"><h2>{{ show.name }}</h2>
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
+        <NuxtLink :to="`/dashboard/${show.slug}`" v-for="show in data.shows">
+            <h2 class="text-3xl font-semibold text-gray-900">{{ show.name }}</h2>
         </NuxtLink>
     </div>
 </template>
@@ -11,5 +12,3 @@ definePageMeta({
 })
 const { data: data } = await useFetch('/api/dashboard/shows')
 </script>
-
-<style lang="scss" scoped></style>

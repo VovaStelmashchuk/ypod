@@ -1,16 +1,12 @@
 <template>
-    <label :class="inputClasses" class="input">
-        <span v-if="prefix" class="input__prefix">
+    <label :class="inputClasses">
+        <span v-if="prefix" class="text-gray-600 flex-shrink-0 mr-2 transition-opacity duration-300">
             {{ prefix }}
         </span>
-        <input
-            :type="type"
-            :placeholder="placeholder"
-            :value="modelValue"
+        <input :type="type" :placeholder="placeholder" :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
-            class="input__value"
-        />
-        <span v-if="suffix" class="input__suffix">
+            class="text-gray-900 flex-grow bg-transparent outline-none min-w-[26px] transition-opacity duration-300" />
+        <span v-if="suffix" class="text-gray-600 flex-shrink-0 ml-2 transition-opacity duration-300">
             {{ suffix }}
         </span>
     </label>
@@ -46,66 +42,11 @@ const { isDisable } = defineProps({
     }
 })
 
-const inputClasses = computed(() => ({
-    'input--disable': isDisable
-}))
+const inputClasses = computed(() => {
+    const base = 'rounded-lg bg-gray-100 p-3 flex items-center font-medium border-2 border-transparent transition-all duration-300'
+    const hover = 'hover:bg-gray-200'
+    const focus = 'focus-within:border-gray-900'
+    const disabled = isDisable ? 'pointer-events-none [&>*]:opacity-30' : ''
+    return `${base} ${hover} ${focus} ${disabled}`
+})
 </script>
-<style lang="scss" scoped>
-.input {
-    $self: &;
-    border-radius: 6px;
-    background-color: var(--fill-tertiary);
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-    border: 2px solid transparent;
-    transition:
-        border-color 0.3s,
-        background-color 0.3s;
-    &__prefix,
-    &__suffix {
-        color: var(--label-secondary);
-        flex-shrink: 0;
-    }
-    &__prefix {
-        margin-right: 8px;
-    }
-    &__suffix {
-        margin-left: 8px;
-    }
-    &__value {
-        color: var(--accent-primary);
-        flex-grow: 1;
-        background-color: transparent;
-        outline: none;
-        min-width: 26px;
-    }
-
-    &__value,
-    &__suffix,
-    &__prefix {
-        transition: opacity 0.3s;
-    }
-
-    @media (hover: hover) {
-        &:hover {
-            background-color: var(--fill-secondary);
-        }
-    }
-
-    &:focus-within {
-        border-color: var(--accent-primary);
-    }
-
-    &--disable {
-        pointer-events: none;
-
-        #{$self}__value,
-        #{$self}__suffix,
-        #{$self}__prefix {
-            opacity: 0.3;
-        }
-    }
-}
-</style>

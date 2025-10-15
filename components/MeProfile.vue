@@ -1,13 +1,9 @@
 <template>
-    <div class="profile">
-        <Avatar :size="avatarSizeType.m" class="profile__avatar" />
-        <div class="profile__content">
-            <h2>{{ user.name }}</h2>
-            <MainButton
-                :theme="buttonThemeType.primary"
-                @click="logoutHandler"
-                label="Logout"
-            />
+    <div class="flex flex-row">
+        <Avatar :size="avatarSizeType.m" class="mr-4" />
+        <div class="flex flex-col">
+            <h2 class="text-3xl font-semibold text-gray-900">{{ user.name }}</h2>
+            <MainButton :theme="buttonThemeType.primary" @click="logoutHandler" label="Logout" />
         </div>
     </div>
 </template>
@@ -26,19 +22,3 @@ const logoutHandler = async () => {
     router.push({ path: '/' })
 }
 </script>
-
-<style scoped lang="scss">
-.profile {
-    display: flex;
-    flex-flow: row;
-
-    &__avatar {
-        margin-right: 1rem;
-    }
-
-    &__content {
-        display: flex;
-        flex-flow: column;
-    }
-}
-</style>

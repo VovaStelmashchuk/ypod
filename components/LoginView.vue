@@ -1,19 +1,10 @@
 <template>
     <DialogWrapper>
-        <div class="modal">
-            <h1 class="modal__title">Login to your account</h1>
-            <div class="modal__item item">
-                <img
-                    src="/google-logo.svg"
-                    loading="lazy"
-                    alt="google logo"
-                    class="item__img"
-                />
-                <MainButton
-                    :theme="buttonThemeType.secondary"
-                    @click="doAuth('google')"
-                    label="Login with Google"
-                />
+        <div class="flex flex-col items-center py-12 px-6">
+            <h1 class="text-4xl font-bold text-gray-900">Login to your account</h1>
+            <div class="flex items-center mt-3.5">
+                <img src="/google-logo.svg" loading="lazy" alt="google logo" class="mr-2.5 w-6 h-auto" />
+                <MainButton :theme="buttonThemeType.secondary" @click="doAuth('google')" label="Login with Google" />
             </div>
         </div>
     </DialogWrapper>
@@ -33,23 +24,3 @@ const doAuth = async (provider) => {
     navigateTo(response.url, { external: true })
 }
 </script>
-<style lang="scss" scoped>
-.modal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 48px 24px;
-    &__item {
-        margin-top: 14px;
-    }
-}
-.item {
-    display: flex;
-    align-items: center;
-    &__img {
-        margin-right: 10px;
-        width: 24px;
-        height: auto;
-    }
-}
-</style>

@@ -1,0 +1,1 @@
+import{C as s,u as a,D as e,n as t,E as r}from"./BWI5sAI2.js";import{a as o}from"./XyBVhfp_.js";import"./D4WPCdkm.js";const{getters:n,actions:i}=o,{setUser:m}=i,{userIsSet:d}=r(n),f=s((async s=>{let r,o;return a(d)||([r,o]=e((()=>m())),await r,o()),a(d)&&"index"===s.name?t("/dashboard"):a(d)||"index"===s.name?void 0:t("/")}));export{f as default};

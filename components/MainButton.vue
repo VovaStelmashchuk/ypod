@@ -1,7 +1,7 @@
 <template>
-    <component :is="tag" :class="buttonClasses" v-bind="attr" class="button">
-        <span v-if="Boolean(icon)" class="button__icon" />
-        <span v-if="isLabelShow" class="button__label">
+    <component :is="tag" :class="buttonClasses" v-bind="attr">
+        <span v-if="Boolean(icon)" :class="iconClasses" />
+        <span v-if="isLabelShow" class="font-bold">
             {{ label }}
         </span>
     </component>
@@ -52,6 +52,7 @@ const { label, icon, target, href, size, theme, isDisable, isLabelShow } =
             default: true
         }
     })
+
 const attr = computed(() => {
     const hrefValue = Boolean(unref(href)) ? { href: unref(href) } : {}
     const targetValue = Boolean(unref(target)) ? { target: unref(target) } : {}
@@ -64,153 +65,60 @@ const attr = computed(() => {
         ...titleValue
     }
 })
-const buttonClasses = computed(() => ({
-    [`button--size-${unref(size)}`]: Boolean(unref(size)),
-    [`button--theme-${unref(theme)}`]: Boolean(unref(theme)),
-    [`button--icon-${unref(icon)}`]: Boolean(unref(icon)),
-    'button--disabled': unref(isDisable)
-}))
+
+const sizeClasses = computed(() => {
+    const s = unref(size)
+    if (s === 's') return 'rounded-md p-2 text-xs'
+    if (s === 'm') return 'rounded-lg p-3 text-sm'
+    if (s === 'l') return 'rounded-lg px-4 py-3 h-12 text-base'
+    return 'rounded-lg p-3 text-sm'
+})
+
+const themeClasses = computed(() => {
+    const t = unref(theme)
+    if (t === 'ghost') return 'text-gray-900 hover:bg-gray-100'
+    if (t === 'secondary') return 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+    if (t === 'primary') return 'bg-gray-900 text-white hover:bg-gray-800'
+    return 'bg-gray-100 text-gray-900'
+})
+
+const iconSizeClasses = computed(() => {
+    const s = unref(size)
+    if (s === 's') return 'w-3 h-3'
+    if (s === 'm') return 'w-3.5 h-3.5'
+    if (s === 'l') return 'w-3.5 h-3.5'
+    return 'w-3.5 h-3.5'
+})
+
+const iconMaskClasses = computed(() => {
+    const i = unref(icon)
+    const masks = {
+        'trash': '[mask-image:url(/icons/svg/trash.svg)]',
+        'minus': '[mask-image:url(/icons/svg/minus.svg)]',
+        'plus': '[mask-image:url(/icons/svg/plus.svg)]',
+        'close': '[mask-image:url(/icons/svg/close.svg)]',
+        'menu': '[mask-image:url(/icons/svg/menu.svg)]',
+        'dark': '[mask-image:url(/icons/svg/dark.svg)]',
+        'light': '[mask-image:url(/icons/svg/light.svg)]',
+        'fullscreen': '[mask-image:url(/icons/svg/fullscreen.svg)]'
+    }
+    return masks[i] || ''
+})
+
+const iconColorClasses = computed(() => {
+    const t = unref(theme)
+    if (t === 'ghost') return 'bg-gray-900'
+    if (t === 'secondary') return 'bg-gray-900'
+    if (t === 'primary') return 'bg-white'
+    return 'bg-gray-900'
+})
+
+const iconClasses = computed(() => {
+    return `block ${unref(iconSizeClasses)} ${unref(iconMaskClasses)} ${unref(iconColorClasses)} [mask-size:contain]`
+})
+
+const buttonClasses = computed(() => {
+    const disabled = unref(isDisable) ? 'pointer-events-none opacity-30' : ''
+    return `flex items-center transition-all duration-300 w-max border-0 ${unref(sizeClasses)} ${unref(themeClasses)} ${disabled}`
+})
 </script>
-<style lang="scss" scoped>
-.button {
-    $self: &;
-    display: flex;
-    align-items: center;
-    transition:
-        background-color 0.3s,
-        opacity 0.3s;
-    width: max-content;
-    border: none;
-
-    &__label {
-        display: block;
-        font-weight: 700;
-    }
-    &__icon {
-        display: block;
-        mask-size: contain;
-    }
-
-    &--size-s {
-        border-radius: 5px;
-        padding: 9px;
-
-        #{$self}__label {
-            font-size: 10px;
-        }
-        #{$self}__icon {
-            width: 12px;
-            height: 12px;
-        }
-    }
-    &--size-m {
-        border-radius: 6px;
-        padding: 12px;
-
-        #{$self}__icon {
-            width: 14px;
-            height: 14px;
-        }
-    }
-    &--size-l {
-        border-radius: 0.5rem;
-        padding: 1rem;
-        height: 3rem;
-
-        #{$self}__icon {
-            width: 14px;
-            height: 14px;
-        }
-    }
-    &--theme-ghost {
-        #{$self}__label {
-            color: var(--label-primary);
-        }
-        #{$self}__icon {
-            background-color: var(--label-primary);
-        }
-    }
-    &--theme-secondary {
-        background-color: var(--fill-tertiary);
-        #{$self}__label {
-            color: var(--label-primary);
-        }
-        #{$self}__icon {
-            background-color: var(--label-primary);
-        }
-    }
-    &--theme-primary {
-        background-color: var(--accent-primary);
-        #{$self}__label {
-            color: var(--background-primary);
-        }
-        #{$self}__icon {
-            background-color: var(--background-primary);
-        }
-    }
-
-    &--icon-trash {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/trash.svg');
-        }
-    }
-    &--icon-minus {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/minus.svg');
-        }
-    }
-    &--icon-plus {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/plus.svg');
-        }
-    }
-    &--icon-close {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/close.svg');
-        }
-    }
-    &--icon-menu {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/menu.svg');
-        }
-    }
-    &--icon-dark {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/dark.svg');
-        }
-    }
-    &--icon-light {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/light.svg');
-        }
-    }
-    &--icon-fullscreen {
-        #{$self}__icon {
-            mask-image: url('/icons/svg/fullscreen.svg');
-        }
-    }
-
-    @media (hover: hover) {
-        &--theme-ghost {
-            &:hover {
-                background-color: var(--fill-tertiary);
-            }
-        }
-        &--theme-secondary {
-            &:hover {
-                background-color: var(--fill-secondary);
-            }
-        }
-        &--theme-primary {
-            &:hover {
-                background-color: var(--accent-secondary);
-            }
-        }
-    }
-
-    &--disabled {
-        pointer-events: none;
-        opacity: 0.3;
-    }
-}
-</style>

@@ -1,35 +1,35 @@
 <template>
-    <div class="podcast">
-        <h1 class="podcast__title">{{ data.showName }}</h1>
+    <div>
+        <h1 class="p-5 text-center text-4xl font-bold text-gray-900">{{ data.showName }}</h1>
     </div>
 
-    <div class="podcast__logo-upload">
-        <label for="logo-upload" class="podcast__logo-label">Upload Podcast Logo</label>
-        <div class="podcast__logo-controls">
+    <div class="my-4 p-4 border border-gray-300 rounded-lg bg-gray-50">
+        <label for="logo-upload" class="block mb-2 font-semibold text-sm text-gray-900">Upload Podcast Logo</label>
+        <div class="flex items-center gap-3">
             <input id="logo-upload" type="file" accept="image/*" @change="handleLogoUpload" ref="logoInput"
-                class="podcast__logo-input" />
-            <div style="--loader-size: 16px" v-if="isLogoUploading">
+                class="p-2 border border-gray-300 rounded bg-white cursor-pointer text-sm text-gray-900 file:py-1.5 file:px-3 file:border-0 file:rounded file:bg-blue-500 file:text-white file:cursor-pointer file:mr-2 hover:file:bg-blue-600" />
+            <div v-if="isLogoUploading" class="w-4 h-4">
                 <MainLoader />
             </div>
         </div>
     </div>
 
-    <div class="podcast__sync-block">
-        <MainButton :theme="buttonThemeType.primary" label="Sync with youtube playlist" class="podcast__sync-button"
+    <div class="flex flex-row items-center gap-2">
+        <MainButton :theme="buttonThemeType.primary" label="Sync with youtube playlist" class="my-2"
             @click="syncPlaylist" />
-        <div style="--loader-size: 16px" v-if="isSyncInProgress">
+        <div v-if="isSyncInProgress" class="w-4 h-4">
             <MainLoader />
         </div>
-        <MainButton :theme="buttonThemeType.primary" label="Update RSS" class="podcast__sync-button"
-            @click="updateRSS" />
-        <div style="--loader-size: 16px" v-if="isRssUpdateInProgress">
+        <MainButton :theme="buttonThemeType.primary" label="Update RSS" class="my-2" @click="updateRSS" />
+        <div v-if="isRssUpdateInProgress" class="w-4 h-4">
             <MainLoader />
         </div>
     </div>
-    <div class="main__grid">
-        <NuxtLink v-for="episode in data.episodes" :to="`/dashboard/${showSlug}/${episode.slug}`" class="episode-card">
-            <img :src="episode.image" alt="Podcast logo" class="episode-card__image" />
-            <p class="episode-card__title">{{ episode.title }}</p>
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8">
+        <NuxtLink v-for="episode in data.episodes" :to="`/dashboard/${showSlug}/${episode.slug}`"
+            class="block no-underline text-inherit transition-all duration-200 ease-in-out cursor-pointer hover:-translate-y-1 hover:opacity-90">
+            <img :src="episode.image" alt="Podcast logo" class="w-full h-auto m-0 rounded-2xl" />
+            <p class="mt-2 font-medium text-gray-900">{{ episode.title }}</p>
         </NuxtLink>
     </div>
 </template>
@@ -99,88 +99,3 @@ const updateRSS = async () => {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.podcast {
-    &__logo-upload {
-        margin: 16px 0;
-        padding: 16px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-    }
-
-    &__logo-label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        color: #333;
-    }
-
-    &__logo-controls {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    &__logo-input {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: white;
-        cursor: pointer;
-        font-size: 14px;
-
-        &::-webkit-file-upload-button {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            margin-right: 8px;
-
-            &:hover {
-                background-color: #0056b3;
-            }
-        }
-    }
-
-    &__sync-block {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-    }
-
-    &__sync-button {
-        margin: 8px 0;
-    }
-}
-
-.episode-card {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    cursor: pointer;
-
-    &:hover {
-        transform: translateY(-4px);
-        opacity: 0.9;
-    }
-
-    &__image {
-        width: 100%;
-        height: auto;
-        margin: 0;
-        border-radius: 1rem;
-    }
-
-    &__title {
-        margin-top: 8px;
-        font-weight: 500;
-    }
-}
-</style>

@@ -22,9 +22,12 @@
     },
     "devDependencies": {
         "@nuxt/devtools": "latest",
+        "@nuxtjs/tailwindcss": "^6.14.0",
+        "@types/node": "^24.7.2",
         "kickstart-scripts": "^1.0.1",
         "postinstall-postinstall": "^2.1.0",
         "prettier": "3.5.3",
-        "sass": "1.77.6"
+        "typescript": "^5.9.3",
+        "vue-tsc": "^2.2.12"
     }
 }

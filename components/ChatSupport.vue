@@ -1,41 +1,22 @@
 <template>
-    <div class="support">
-        <div @click="supportDialog = false" class="support__background"></div>
-        <div class="support__wrapper">
-            <div class="support__header">
-                <MainTitle label="Support Chat" class="support__title" />
-                <MainButton
-                    label="close modal"
-                    :isLabelShow="false"
-                    :size="buttonSizeType.s"
-                    :theme="buttonThemeType.primary"
-                    @click="supportDialog = false"
-                    class="support__close"
-                />
+    <div class="fixed top-0 right-0 w-full h-full z-40 flex justify-end">
+        <div @click="supportDialog = false" class="absolute top-0 right-0 w-full h-full bg-gray-500/30"></div>
+        <div class="z-10 relative bg-white w-[400px] p-4 flex flex-col">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-900">Support Chat</h3>
+                <MainButton label="close modal" :isLabelShow="false" :size="buttonSizeType.s"
+                    :theme="buttonThemeType.primary" @click="supportDialog = false" />
             </div>
-            <UiScrollbar class="support__messages">
-                <p
-                    v-for="msg in messages"
-                    :key="msg._id"
-                    :class="getMessageClasses(msg.sender)"
-                    class="support__message"
-                >
+            <div class="rounded-lg border border-gray-200 flex-grow p-3 mt-2.5 mb-2.5 overflow-auto mr-0">
+                <p v-for="msg in messages" :key="msg._id" :class="getMessageClasses(msg.sender)"
+                    class="py-1.5 px-2 rounded-tr-lg rounded-br-lg rounded-bl-lg mb-2.5 text-gray-900 text-sm leading-relaxed w-max max-w-full mr-auto text-left bg-gray-200">
                     {{ msg.message }}
                 </p>
-            </UiScrollbar>
-            <div class="support__bottom bottom">
-                <InputField
-                    placeholder="Type your message..."
-                    class="bottom__input"
-                    v-model="message"
-                    @keyup.enter="sendMessage"
-                />
-                <MainButton
-                    :theme="buttonThemeType.primary"
-                    @click="sendMessage"
-                    label="Send"
-                    class="bottom__btn"
-                />
+            </div>
+            <div class="flex items-center">
+                <InputField placeholder="Type your message..." class="flex-grow" v-model="message"
+                    @keyup.enter="sendMessage" />
+                <MainButton :theme="buttonThemeType.primary" @click="sendMessage" label="Send" class="ml-2.5" />
             </div>
         </div>
     </div>
@@ -94,92 +75,10 @@ onBeforeUnmount(() => {
 })
 
 const getMessageClasses = (sender) => ({
-    'support__message--is-user': sender === 'user'
+    'ml-auto mr-0 text-right bg-gray-100 rounded-tl-lg rounded-bl-lg rounded-br-lg text-gray-600': sender === 'user'
 })
 </script>
 
-<style lang="scss" scoped>
-.support {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 4;
-    display: flex;
-    justify-content: flex-end;
-
-    &__background {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--label-tertiary);
-    }
-
-    &__wrapper {
-        z-index: 1;
-        position: relative;
-        background-color: var(--background-primary);
-        width: 400px;
-        padding: 15px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    &__messages {
-        border-radius: 8px;
-        border: 1px solid var(--separator-secondary);
-        flex-grow: 1;
-        padding: 12px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        overflow: auto;
-        margin-right: 0;
-    }
-
-    &__message {
-        padding: 6px 8px;
-        border-radius: 0 8px 8px 8px;
-        margin-bottom: 10px;
-        color: var(--label-primary);
-        font-size: 14px;
-        line-height: 1.4;
-        width: max-content;
-        max-width: 100%;
-        margin-right: auto;
-        text-align: left;
-        background-color: var(--fill-secondary);
-        color: var(--label-primary);
-
-        &--is-user {
-            margin-left: auto;
-            margin-right: initial;
-            text-align: right;
-            background-color: var(--fill-tertiary);
-            border-radius: 8px 0 8px 8px;
-            color: var(--label-secondary);
-        }
-    }
-}
-.bottom {
-    display: flex;
-    align-items: center;
-    align-items: center;
-
-    &__btn {
-        margin-left: 10px;
-    }
-
-    &__input {
-        flex-grow: 1;
-    }
-}
+<style scoped>
+/* No custom styles needed - all in Tailwind classes */
 </style>

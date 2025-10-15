@@ -1,10 +1,12 @@
 <template>
-    <div class="main">
-        <header class="main__header header">
-            <a href="/"><h1 style="font-weight: 900">Ypod</h1></a>
+    <div class="bg-gray-50 flex-col flex min-h-screen">
+        <header class="mx-auto max-w-7xl w-full flex justify-between py-4 px-4">
+            <a href="/">
+                <h1 class="text-4xl font-black text-gray-900">Ypod</h1>
+            </a>
         </header>
 
-        <main class="main__content content">
+        <main class="flex-grow my-10 mx-auto max-w-7xl w-full px-4">
             <slot />
         </main>
 
@@ -13,37 +15,3 @@
 </template>
 
 <script setup lang="js"></script>
-<style lang="scss" scoped>
-.main {
-    background-color: var(--background-primary);
-    flex-direction: column;
-    display: flex;
-    min-height: 100vh;
-
-    &__header {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 1300px;
-        width: 100%;
-    }
-    &__content {
-        flex-grow: 1;
-        margin: 40px auto;
-        max-width: 1300px;
-        width: 100%;
-    }
-    &__line {
-        position: relative;
-        z-index: 2;
-    }
-}
-.content {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-.header {
-    display: flex;
-    justify-content: space-between;
-    padding: 16px 10px;
-}
-</style>
