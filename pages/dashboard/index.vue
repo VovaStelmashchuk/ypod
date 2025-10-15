@@ -1,7 +1,6 @@
 <template>
     <div class="main__grid">
-        <NuxtLink :to="`/dashboard/${show.slug}`" v-for="show in data.shows"
-            ><h2>{{ show.name }}</h2>
+        <NuxtLink :to="`/dashboard/${show.slug}`" v-for="show in data.shows"><h2>{{ show.name }}</h2>
         </NuxtLink>
     </div>
 </template>
