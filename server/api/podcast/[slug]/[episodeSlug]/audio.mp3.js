@@ -31,18 +31,7 @@ export default defineEventHandler(async (event) => {
 
     console.log('Audio file length:', fileLength)
 
-    // Handle HEAD requests first
-    if (method === 'HEAD') {
-        setResponseHeaders(event, {
-            'Content-Type': 'audio/mpeg',
-            'Cache-Control': 'public, max-age=86400',
-            'Accept-Ranges': 'bytes',
-            'Content-Length': String(fileLength)
-        })
-        setResponseStatus(event, 200)
-        return ''
-    }
-
+    // Process range header if present
     if (range) {
         const parts = range.replace(/bytes=/, '').split('-')
         start = parseInt(parts[0], 10)
@@ -55,20 +44,38 @@ export default defineEventHandler(async (event) => {
             return ''
         }
 
-        event.node.res.writeHead(206, {
+        // For both HEAD and GET with Range, return 206
+        const headers = {
             'Content-Range': `bytes ${start}-${end}/${fileLength}`,
-            'Content-Length': end - start + 1,
+            'Content-Length': String(end - start + 1),
             'Content-Type': 'audio/mpeg',
             'Cache-Control': 'public, max-age=86400',
             'Accept-Ranges': 'bytes'
-        })
+        }
+
+        if (method === 'HEAD') {
+            setResponseHeaders(event, headers)
+            setResponseStatus(event, 206)
+            return ''
+        }
+
+        event.node.res.writeHead(206, headers)
     } else {
-        setResponseHeaders(event, {
+        // No range request
+        const headers = {
             'Content-Type': 'audio/mpeg',
             'Cache-Control': 'public, max-age=86400',
             'Accept-Ranges': 'bytes',
             'Content-Length': String(fileLength)
-        })
+        }
+
+        if (method === 'HEAD') {
+            setResponseHeaders(event, headers)
+            setResponseStatus(event, 200)
+            return ''
+        }
+
+        setResponseHeaders(event, headers)
     }
 
     const readStream = await openDownloadStream(BUCKET.audio, audio, {
