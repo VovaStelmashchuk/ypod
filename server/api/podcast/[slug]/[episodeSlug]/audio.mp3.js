@@ -61,7 +61,8 @@ export default defineEventHandler(async (event) => {
 
     if (method === 'HEAD') {
         event.node.res.statusCode = 200
-        return ''
+        event.node.res.end()
+        return
     }
 
     const readStream = await openDownloadStream(BUCKET.audio, audio, {

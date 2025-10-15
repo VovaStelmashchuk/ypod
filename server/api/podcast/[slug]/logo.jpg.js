@@ -1,5 +1,9 @@
 import { connectDB } from '~/server/db/mongo'
-import { BUCKET, openDownloadStream } from '~/server/utils/files'
+import {
+    BUCKET,
+    getFileSizeInByte,
+    openDownloadStream
+} from '~/server/utils/files'
 
 export default defineEventHandler(async (event) => {
     const method = event.node.req.method
@@ -52,7 +56,8 @@ export default defineEventHandler(async (event) => {
 
     if (method === 'HEAD') {
         event.node.res.statusCode = 200
-        return ''
+        event.node.res.end()
+        return
     }
 
     const readStream = await openDownloadStream(BUCKET.showLogo, logo, {
