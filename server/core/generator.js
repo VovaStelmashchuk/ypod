@@ -52,7 +52,10 @@ export async function updateRss(showSlug) {
                 ]
             }
         ],
-        itunesImage: logoUrl
+        itunesImage: logoUrl,
+        customElements: [
+            { 'podcast:guid': showInfo.slug }
+        ]
     })
 
     const episodes = await db

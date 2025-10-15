@@ -12,11 +12,13 @@ export default defineEventHandler(async (event) => {
 
     setResponseHeaders(event, {
         'Content-Type': 'application/rss+xml',
-        'Cache-Control': 'public, max-age=86400' // Cache for 1 day
+        'Cache-Control': 'public, max-age=86400', // Cache for 1 day
+        'Content-Length': String(Buffer.from(rss).length)
     })
 
     if (event.req.method === 'HEAD') {
-        return
+        setResponseStatus(event, 200)
+        return ''
     }
 
     const readStream = new ReadableStream({

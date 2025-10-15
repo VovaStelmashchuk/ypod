@@ -31,6 +31,18 @@ export default defineEventHandler(async (event) => {
 
     console.log('Audio file length:', fileLength)
 
+    // Handle HEAD requests first
+    if (method === 'HEAD') {
+        setResponseHeaders(event, {
+            'Content-Type': 'audio/mpeg',
+            'Cache-Control': 'public, max-age=86400',
+            'Accept-Ranges': 'bytes',
+            'Content-Length': String(fileLength)
+        })
+        setResponseStatus(event, 200)
+        return ''
+    }
+
     if (range) {
         const parts = range.replace(/bytes=/, '').split('-')
         start = parseInt(parts[0], 10)
@@ -57,12 +69,6 @@ export default defineEventHandler(async (event) => {
             'Accept-Ranges': 'bytes',
             'Content-Length': String(fileLength)
         })
-    }
-
-    if (method === 'HEAD') {
-        event.node.res.statusCode = 200
-        event.node.res.end()
-        return
     }
 
     const readStream = await openDownloadStream(BUCKET.audio, audio, {
