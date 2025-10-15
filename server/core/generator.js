@@ -65,10 +65,12 @@ export async function updateRss(showSlug) {
         .toArray()
 
     const fileSizes = await Promise.all(
-        episodes.map((post) => getFileSizeInByte(BUCKET.audio, post.audio))
+        episodes.map((post) => post.audio ? getFileSizeInByte(BUCKET.audio, post.audio) : Promise.resolve(0))
     )
 
     episodes.forEach((post, index) => {
+        // Skip episodes without audio files
+        if (!post.audio) return
         let episodeDescription = post.description
 
         let linkToEpisode = `${host}/episode/${post.slug}`
