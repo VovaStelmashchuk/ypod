@@ -12,8 +12,6 @@ export async function syncPlayList(showSlug) {
 
     const originPlaylistItems = await getPlaylistItems(playlistId)
 
-    let isFirst = true
-
     // Get all video IDs and fetch their durations
     const videoIds = originPlaylistItems.map(item => item.snippet.resourceId.videoId);
     const durations = await getVideoDurations(videoIds);
@@ -25,10 +23,6 @@ export async function syncPlayList(showSlug) {
         }
         if (!thumbnail) {
             console.error('Thumbnails not found', item.snippet)
-        }
-        if (isFirst) {
-            console.log(item)
-            isFirst = false
         }
         const videoId = item.snippet.resourceId.videoId;
         const isoDuration = durations[videoId];
