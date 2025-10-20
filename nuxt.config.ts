@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     modules: ['@nuxtjs/tailwindcss'],
     tailwindcss: {
         cssPath: '@/assets/css/tailwind.css',
-        configPath: 'tailwind.config.ts',
+        configPath: 'tailwind.config.ts'
     },
     runtimeConfig: {
         mongoUri: '',
@@ -61,8 +61,7 @@ export default defineNuxtConfig({
             websocket: true
         },
         compressPublicAssets: true,
-        bodySizeLimit: 100 * 1024 * 1024
+        bodySizeLimit: 500 * 1024 * 1024
     } as any,
     experimental: { appManifest: false }
 })
-

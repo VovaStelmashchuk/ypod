@@ -9,13 +9,9 @@ services:
       - 6002:3000
     environment:
       - NUXT_PUBLIC_BASE_URL=https://ypod.stelmashchuk.dev
-    secrets:
-      - source: ypod_mongo_uri
-        target: mongo_uri
-      - source: ypod_google_client_id
-        target: google_client_id
-      - source: ypod_youtube_api_key
-        target: youtube_api_key
+      - NUXT_YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+      - NUXT_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - NUXT_MONGO_URI=${MONGO_URI}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/service/health"]
       interval: 30s
@@ -33,13 +29,7 @@ services:
     networks:
       - infra_reverse-proxy
       - infra_mongo
-secrets:
-  ypod_mongo_uri:
-    external: true
-  ypod_google_client_id:
-    external: true
-  ypod_youtube_api_key:
-    external: true
+
 networks:
   infra_reverse-proxy:
     external: true

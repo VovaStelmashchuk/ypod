@@ -3,7 +3,7 @@ name: Deploy docker image and update production
 on:
     push:
         branches:
-            - 'main'
+            - "main"
 
 env:
     REGISTRY: ghcr.io
@@ -56,6 +56,9 @@ jobs:
               run: |
                   echo "GIT_COMMIT_SHA=${{ github.sha }}" >> ./envfile
                   echo "DOCKER_IMAGE=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> ./envfile
+                  echo "YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}" >> ./envfile
+                  echo "GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}" >> ./envfile
+                  echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> ./envfile
                   echo "DOCKER_STACK_NAME=$(echo ${{ github.repository }} | cut -d '/' -f 2 | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
             - name: Docker Stack Deploy
