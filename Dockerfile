@@ -1,11 +1,9 @@
-ARG NODE_VERSION=20.18.0
+FROM node:24.2.0-slim as base
 
-FROM node:${NODE_VERSION}-slim as base
-
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 
 ARG PORT=3000
-ARG GIT_COMMIT_SHA
 
 WORKDIR /src
 
@@ -22,7 +20,6 @@ FROM base
 
 ENV PORT=$PORT
 ENV NODE_ENV=production
-ENV NUXT_PUBLIC_GIT_COMMIT_SHA=$GIT_COMMIT_SHA
 
 COPY --from=build /src/.output /src/.output
 
