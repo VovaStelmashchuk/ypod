@@ -14,7 +14,8 @@ export default defineNuxtConfig({
         youtubeApiKey: '',
         public: {
             baseUrl: 'http://localhost:3000',
-            gitCommitSha: ''
+            gitCommitSha: '',
+            uploadChunkSize: 5 * 1024 * 1024 // 5MB chunks
         }
     },
     vite: {
@@ -61,7 +62,6 @@ export default defineNuxtConfig({
             websocket: true
         },
         compressPublicAssets: true,
-        bodySizeLimit: 500 * 1024 * 1024
     } as any,
     experimental: { appManifest: false }
 })

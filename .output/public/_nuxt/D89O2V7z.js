@@ -1,1 +1,0 @@
-import{_ as s}from"./BfXJZl7K.js";import{q as a,a as o,o as r,d as e,e as l,r as t}from"./BWI5sAI2.js";const n={class:"bg-gray-50 flex-col flex min-h-screen"},f={class:"flex-grow mx-auto max-w-7xl w-full px-4"};const c=a({},[["render",function(a,c){const m=s;return r(),o("div",n,[e("main",f,[t(a.$slots,"default")]),l(m)])}]]);export{c as default};

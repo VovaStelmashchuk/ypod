@@ -72,14 +72,13 @@
 
             <div class="bg-gray-100/50 p-6 rounded-xl">
                 <h2 class="mt-0 mb-4 text-xl font-semibold text-gray-900">Upload Audio</h2>
-                <div class="flex flex-col gap-3 items-start">
+                <div class="flex flex-col gap-3 items-start w-full max-w-2xl">
                     <input type="file" accept="audio/mp3,audio/mpeg" @change="handleFileSelect" ref="fileInput"
                         class="p-2 border border-gray-300 rounded bg-gray-50 text-gray-900" />
                     <MainButton :theme="buttonThemeType.primary" :label="isUploading ? 'Uploading...' : 'Upload Audio'"
                         @click="uploadAudio" :disabled="!selectedFile || isUploading" class="min-w-[150px]" />
-                    <div v-if="isUploading" class="w-4 h-4">
-                        <MainLoader />
-                    </div>
+                    <HorizontalProgressBar v-if="isUploading" :progress="uploadProgress" label="Uploading audio file..."
+                        class="w-full" />
                     <p v-if="uploadMessage"
                         :class="{ 'text-green-500': uploadSuccess, 'text-red-500': !uploadSuccess }">
                         {{ uploadMessage }}
@@ -116,10 +115,12 @@ const fileInput = ref(null)
 const isUploading = ref(false)
 const uploadMessage = ref('')
 const uploadSuccess = ref(false)
+const uploadProgress = ref(0)
 
 const handleFileSelect = (event) => {
     selectedFile.value = event.target.files[0]
     uploadMessage.value = ''
+    uploadProgress.value = 0
 }
 
 const uploadAudio = async () => {
@@ -127,26 +128,57 @@ const uploadAudio = async () => {
 
     isUploading.value = true
     uploadMessage.value = ''
+    uploadProgress.value = 0
 
     try {
-        const formData = new FormData()
-        formData.append('audio', selectedFile.value)
+        const config = useRuntimeConfig()
+        const chunkSize = config.public.uploadChunkSize
+        const file = selectedFile.value
+        const totalChunks = Math.ceil(file.size / chunkSize)
+        const uploadId = `${Date.now()}-${Math.random().toString(36).substring(7)}`
 
-        const response = await $fetch(`/api/dashboard/${showSlug}/${episodeSlug}/upload`, {
-            method: 'POST',
-            body: formData
-        })
+        console.log(`Starting chunked upload: ${file.name}, size: ${file.size}, chunks: ${totalChunks}`)
 
-        uploadMessage.value = 'Audio uploaded successfully!'
-        uploadSuccess.value = true
+        // Upload chunks sequentially
+        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+            const start = chunkIndex * chunkSize
+            const end = Math.min(start + chunkSize, file.size)
+            const chunk = file.slice(start, end)
 
-        // Refresh the page data
-        setTimeout(() => {
-            window.location.reload()
-        }, 1000)
+            const formData = new FormData()
+            formData.append('uploadId', uploadId)
+            formData.append('chunkIndex', chunkIndex.toString())
+            formData.append('totalChunks', totalChunks.toString())
+            formData.append('originalFilename', file.name)
+            formData.append('fileChunk', chunk)
+
+            console.log(`Uploading chunk ${chunkIndex + 1}/${totalChunks}`)
+
+            const response = await $fetch(`/api/dashboard/${showSlug}/${episodeSlug}/upload-chunk`, {
+                method: 'POST',
+                body: formData
+            })
+
+            // Update progress
+            uploadProgress.value = ((chunkIndex + 1) / totalChunks) * 100
+
+            console.log(`Chunk ${chunkIndex + 1}/${totalChunks} uploaded, status: ${response.status}`)
+
+            if (response.status === 'complete') {
+                uploadMessage.value = 'Audio uploaded successfully!'
+                uploadSuccess.value = true
+
+                // Refresh the page data
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000)
+            }
+        }
     } catch (error) {
+        console.error('Upload error:', error)
         uploadMessage.value = 'Failed to upload audio. Please try again.'
         uploadSuccess.value = false
+        uploadProgress.value = 0
     } finally {
         isUploading.value = false
     }

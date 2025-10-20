@@ -1,1 +1,0 @@
-import{q as r,a as o,o as a}from"./BWI5sAI2.js";const s={class:"w-[120px] h-[120px] rounded-full border-[24px] border-gray-200 border-t-gray-900 animate-spin"};const e=r({},[["render",function(r,e){return a(),o("div",s)}]]);export{e as _};

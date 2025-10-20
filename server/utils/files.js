@@ -136,3 +136,54 @@ export async function uploadFile(bucketName, filename, fileBuffer) {
         })
     })
 }
+
+/**
+ * Uploads a file to GridFS from multiple chunk files.
+ *
+ * @param bucketName {string} - The name of the bucket.
+ * @param filename {string} - The name of the file to upload.
+ * @param chunksDir {string} - The directory containing the chunk files.
+ * @param totalChunks {number} - The total number of chunks.
+ * @returns {Promise<import('mongodb').ObjectId>} - The GridFS file ID
+ */
+export async function uploadFileFromChunks(bucketName, filename, chunksDir, totalChunks) {
+    console.info(
+        `Uploading file from chunks to bucket ${bucketName} with filename ${filename}, totalChunks: ${totalChunks}`
+    )
+
+    const bucket = await getBucket(bucketName)
+    const fs = await import('fs/promises')
+    const path = await import('path')
+
+    // Remove the existing file if it exists
+    await dropFile(bucketName, filename)
+
+    // Upload the new file by reading chunks sequentially
+    return new Promise(async (resolve, reject) => {
+        const uploadStream = bucket.openUploadStream(filename)
+
+        try {
+            // Read and write chunks in order
+            for (let i = 0; i < totalChunks; i++) {
+                const chunkPath = path.join(chunksDir, String(i))
+                const chunkBuffer = await fs.readFile(chunkPath)
+                uploadStream.write(chunkBuffer)
+            }
+            uploadStream.end()
+
+            uploadStream.on('finish', () => {
+                console.log(`File ${filename} uploaded to bucket ${bucketName} from chunks`)
+                resolve(uploadStream.id)
+            })
+
+            uploadStream.on('error', (err) => {
+                console.error('Error uploading file from chunks:', err)
+                reject(err)
+            })
+        } catch (err) {
+            console.error('Error reading chunk files:', err)
+            uploadStream.destroy()
+            reject(err)
+        }
+    })
+}
