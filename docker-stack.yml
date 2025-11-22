@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   app:
-    image: ghcr.io/${DOCKER_IMAGE}:${GIT_COMMIT_SHA:-latest}
+    image: ghcr.io/vovastelmashchuk/ypod:${GIT_COMMIT_SHA:-latest}
     dns:
       - 8.8.8.8
       - 8.8.4.4
